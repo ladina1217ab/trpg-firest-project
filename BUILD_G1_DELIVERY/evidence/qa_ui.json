@@ -1,0 +1,180 @@
+{
+ "results": [
+  {
+   "id": "G1-OPK-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "S02": {
+     "stateUnchangedAfterClose": true,
+     "selectionKept": "gaegyeong",
+     "tabKept": "city"
+    },
+    "S03": {
+     "stateUnchangedAfterClose": true,
+     "tabKept": "nation",
+     "origin": {
+      "originScreen": "S03",
+      "originTab": "nation",
+      "ltab": "city",
+      "selectedEntity": {
+       "type": "region",
+       "id": "gaegyeong"
+      },
+      "scrollL": 0,
+      "scrollR": 0,
+      "scrollV": 0,
+      "rightOpen": true,
+      "prePausePhase": "PAUSED_USER",
+      "worldRevision": 0
+     }
+    },
+    "S06": {
+     "title": "철원 부대 주장 임명"
+    },
+    "running": {
+     "pausedWhileOpen": true,
+     "resumedOnClose": true
+    },
+    "DN06": {
+     "originScreen": "DN-06",
+     "reviewStillShown": true,
+     "phaseAfterClose": "PAUSED_MONTHLY",
+     "queued": [
+      "군사 연구 담당관: 박술희"
+     ],
+     "officerNotYetApplied": true
+    },
+    "component": "네 호출 위치 모두 openPicker() 하나를 쓴다"
+   }
+  },
+  {
+   "id": "G1-OPK-02(화면)",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "columns": [
+     "이름",
+     "현재 직책",
+     "통솔",
+     "무력",
+     "지략",
+     "정치",
+     "신망",
+     "충성",
+     "적성 ▼",
+     "임명 상태"
+    ],
+    "politicsDescending": [
+     90,
+     60,
+     58,
+     55,
+     50,
+     45
+    ],
+    "availableFilterCount": 5,
+    "unavailableReason": "왕건은 고려 국왕입니다. 군주는 실무 보직에 앉힐 수 없습니다.",
+    "search": [
+     "박술희"
+    ],
+    "kingConfirmDisabled": true,
+    "kingReason": "왕건은 고려 국왕입니다. 군주는 실무 보직에 앉힐 수 없습니다.",
+    "escOrder": "선택 해제 → 닫기"
+   }
+  },
+  {
+   "id": "G1-OPK-04(화면)",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "vacancyWarning": [
+     "철원 부대 주장 자리가 빕니다: 병력 500명의 지휘 보정 +15.2% → 0% (통솔 50 취급)"
+    ],
+    "confirmDisabledUntilAcknowledged": true,
+    "after": {
+     "armyCommander": null,
+     "deputy": "yugeumpil",
+     "armyId": null
+    }
+   }
+  },
+  {
+   "id": "G1-TIME-02(화면)",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "week": [
+     4,
+     4,
+     4
+    ],
+    "unchangedAfterWaitAndSpeedClick": true,
+    "afterMapRoundTripAndSpace": "PAUSED_MONTHLY"
+   }
+  },
+  {
+   "id": "G1-TIME-01(재개)",
+   "status": "PASS",
+   "note": "예약 명령은 재개 때 한 번 적용되고 주는 넘어가지 않는다",
+   "evidence": {
+    "phase": "RUNNING",
+    "officer": "baksulhui",
+    "queued": 0,
+    "week": 4
+   }
+  },
+  {
+   "id": "G1-GOV-01(화면)",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "disabledWithReason": [
+     "임명: 고창은 자치를 보장한 고창 호족의 거점입니다. 임명·건설·모병은 직할 협상을 거쳐야 합니다.",
+     "임명: 고창은 자치를 보장한 고창 호족의 거점입니다. 임명·건설·모병은 직할 협상을 거쳐야 합니다.",
+     "임명: 고창은 자치를 보장한 고창 호족의 거점입니다. 임명·건설·모병은 직할 협상을 거쳐야 합니다."
+    ]
+   }
+  },
+  {
+   "id": "G1-UI-01 1440x810",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "pickerDialog": {
+     "inView": true,
+     "w": 1200,
+     "h": 704
+    },
+    "lastColumnVisible": true,
+    "confirmButtonVisible": true,
+    "resumeButtonVisible": true,
+    "consoleErrors": []
+   }
+  },
+  {
+   "id": "G1-UI-01 1366x768",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "pickerDialog": {
+     "inView": true,
+     "w": 1200,
+     "h": 666
+    },
+    "lastColumnVisible": true,
+    "confirmButtonVisible": true,
+    "resumeButtonVisible": true,
+    "consoleErrors": []
+   }
+  },
+  {
+   "id": "PHONE-400",
+   "status": "PASS",
+   "note": "휴대폰 폭은 넘침 여부만 확인",
+   "evidence": {
+    "horizontalOverflow": false
+   }
+  }
+ ]
+}

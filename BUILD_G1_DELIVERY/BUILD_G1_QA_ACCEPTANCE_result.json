@@ -1,0 +1,161 @@
+{
+ "metadata": {
+  "version": "0.1",
+  "qaState": "RUN",
+  "scenario": "S04_0929_10",
+  "seed": 929,
+  "gqs": "NOT_MEASURED"
+ },
+ "tests": [
+  {
+   "id": "G1-BASE-01",
+   "status": "PASS",
+   "evidence": "G1-BASE-01 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-ECON-01",
+   "status": "PASS",
+   "evidence": "G1-ECON-01 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-ECON-02",
+   "status": "PASS",
+   "evidence": "G1-ECON-02 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-TIME-01",
+   "status": "PASS",
+   "evidence": "G1-TIME-01 [엔진], G1-TIME-01(재개) [화면]",
+   "note": "예약 명령은 재개 때 한 번 적용되고 주는 넘어가지 않는다"
+  },
+  {
+   "id": "G1-TIME-02",
+   "status": "PASS",
+   "evidence": "G1-TIME-02 [엔진], G1-TIME-02(화면) [화면]",
+   "note": ""
+  },
+  {
+   "id": "G1-TIME-03",
+   "status": "PASS",
+   "evidence": "G1-TIME-03 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-TIME-04",
+   "status": "PASS",
+   "evidence": "G1-TIME-04 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-OPK-01",
+   "status": "PASS",
+   "evidence": "G1-OPK-01 [화면]",
+   "note": ""
+  },
+  {
+   "id": "G1-OPK-02",
+   "status": "PASS",
+   "evidence": "G1-OPK-02 [엔진], G1-OPK-02(화면) [화면]",
+   "note": ""
+  },
+  {
+   "id": "G1-OPK-03",
+   "status": "PASS",
+   "evidence": "G1-OPK-03 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-OPK-04",
+   "status": "PASS",
+   "evidence": "G1-OPK-04 [엔진], G1-OPK-04(화면) [화면]",
+   "note": ""
+  },
+  {
+   "id": "G1-GOV-01",
+   "status": "PASS",
+   "evidence": "G1-GOV-01 [엔진], G1-GOV-01(화면) [화면]",
+   "note": ""
+  },
+  {
+   "id": "G1-GOV-02",
+   "status": "PASS",
+   "evidence": "G1-GOV-02 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-GOV-03",
+   "status": "PASS",
+   "evidence": "G1-GOV-03 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-CITY-01",
+   "status": "PASS",
+   "evidence": "G1-CITY-01 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-CITY-02",
+   "status": "PASS",
+   "evidence": "G1-CITY-02 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-NAT-01",
+   "status": "PASS",
+   "evidence": "G1-NAT-01 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-NAT-02",
+   "status": "PASS",
+   "evidence": "G1-NAT-02 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-NAT-03",
+   "status": "PASS",
+   "evidence": "G1-NAT-03 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-NAT-04",
+   "status": "PASS",
+   "evidence": "G1-NAT-04 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-AI-01",
+   "status": "PASS",
+   "evidence": "G1-AI-01 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-DETER-01",
+   "status": "PASS",
+   "evidence": "G1-DETER-01 [엔진]",
+   "note": ""
+  },
+  {
+   "id": "G1-PLAY-01",
+   "status": "PASS",
+   "evidence": "G1-PLAY-01 [엔진]",
+   "note": "고정 각본 자동 플레이 결과다. 사람이 느끼는 재미·이해도(11.1의 질문)와 GQS는 측정하지 않았다."
+  },
+  {
+   "id": "G1-REG-01",
+   "status": "PASS",
+   "evidence": "G1-REG-01 [엔진]",
+   "note": "원 P0-R QA-01~12 목록은 이 저장소에 없다. 대신 내정을 끈 새 엔진이 R3 기준선 엔진과 60주 동안 같은 상태(연대기·세력·거점·신뢰)를 내는지 9판 비교했다."
+  },
+  {
+   "id": "G1-UI-01",
+   "status": "PASS",
+   "evidence": "G1-UI-01 1440x810 [화면], G1-UI-01 1366x768 [화면]",
+   "note": ""
+  }
+ ]
+}

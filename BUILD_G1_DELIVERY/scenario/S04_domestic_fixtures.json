@@ -1,0 +1,21 @@
+{
+ "scenario": "S04_0929_10",
+ "production": {
+  "note": "실플레이 기본값. 시설 Lv0, 국정 진척 0, 담당관은 기존 지역 성주(양검·용검)만 실무 성주로 등록. 통치 상태는 기존 Region.controller/overlord/autonomy에서 유도.",
+  "scenarioCapacityBonus": {
+   "hubaekje": 4.5
+  }
+ },
+ "devOnly": {
+  "devFastResearch": {
+   "appliesTo": "플레이어 세력만",
+   "howToEnable": "시작 화면의 QA fixture 체크 또는 newGame(player, seed, {fixture:\"devFastResearch\"})",
+   "shownIn": "국정 화면·월간 결산의 QA fixture 표시, s.dom.audit",
+   "enabledInProduction": false,
+   "mil01Completed": true,
+   "mil02ProgressPct": 64,
+   "soc01Completed": true,
+   "soc03ProgressPct": 64
+  }
+ }
+}

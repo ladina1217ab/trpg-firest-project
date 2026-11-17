@@ -4,9 +4,9 @@ const D=Sim.DATA, U=D.UNIT, UN=D.UNITS, K=D.K, FM=D.FMETA;
 const $=q=>document.querySelector(q);
 const fmt=n=>Math.round(n).toLocaleString('ko-KR');
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const G={s:null,sel:null,speed:1,paused:true,acc:0,tab:'report',sheet:null,autoPause:true,seen:0,vb:null,veil:'start'};
+const G={s:null,sel:null,speed:1,paused:true,acc:0,tab:'report',sheet:null,autoPause:true,seen:0,vb:null,veil:'start',ltab:'info',rightOpen:true,picker:null,review:null,reviewHidden:false,wasRunning:false,prjT:''};
 const me=()=>G.s.playerFactionId;
-const SAVE='sgk-p0r-save', AUTO='sgk-p0r-auto';
+const SAVE='sgk-g1-save', AUTO='sgk-g1-auto';
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
 
 // ── 지도 좌표: 위경도를 실제 비율로 투영 ──
@@ -33,20 +33,6 @@ const epoint=(a,b,t)=>{const g=egeom(a,b);if(!g.c)return[g.A[0]+(g.B[0]-g.A[0])*
 const epath=(a,b)=>{const g=egeom(a,b);return g.c?`M${g.A}Q${g.c} ${g.B}`:`M${g.A}L${g.B}`};
 
 const svg=$('#map');
-function buildMap(){
-  const land=smooth(COAST.map(p=>P(p[0],p[1])),true);
-  const isle=(lat,lon,rx,ry,rot)=>{const p=P(lat,lon);return `<ellipse class="isle" cx="${p[0]}" cy="${p[1]}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${p[0]} ${p[1]})"/>`};
-  const geo=(lat,lon,t,sz,rot)=>{const p=P(lat,lon);return `<text class="geo" x="${p[0]}" y="${p[1]}" font-size="${sz}" text-anchor="middle" transform="rotate(${rot||0} ${p[0]} ${p[1]})">${t}</text>`};
-  svg.innerHTML=`<defs><pattern id="wv" width="46" height="18" patternUnits="userSpaceOnUse"><path d="M2,9 q5,-5 10,0 t10,0" fill="none" stroke="#7f918b" stroke-width="1" opacity=".38"/></pattern></defs>
-  <rect class="sea" x="-3000" y="-3000" width="7000" height="7000"/><rect x="-3000" y="-3000" width="7000" height="7000" fill="url(#wv)"/>
-  <path class="land-sh" d="${land}" transform="translate(4,5)"/><path class="land" d="${land}"/>
-  ${isle(34.87,128.63,15,9,-30)}${isle(34.45,126.22,12,8,20)}${isle(34.78,127.98,9,7,0)}${isle(37.7,126.33,5,11,10)}${isle(34.35,126.98,8,5,0)}
-  <g>${RIVERS.map(r=>`<path class="river" d="${smooth(r.map(p=>P(p[0],p[1])))}"/>`).join('')}</g>
-  <g>${RIDGES.map(r=>`<path class="ridge${r[0]?' minor':''}" d="${ridge(r[1],r[0]?5:8,r[0]?9:11)}"/>`).join('')}</g>
-  ${geo(36.9,125.2,'西海',44)}${geo(37.2,130.05,'東海',44)}${geo(34.42,128.2,'南海',34)}${geo(37.62,128.42,'太白',17,62)}${geo(36.33,127.74,'小白',17,74)}
-  <g>${D.EDGES.map(e=>`<path class="road${e[2]==='고개'?' pass':e[2]==='해로'?' sea-route':''}" d="${epath(e[0],e[1])}"/>`).join('')}</g>
-  <g id="hl"></g><g id="regions"></g><g id="armies"></g>`;
-}
 function fit(){const r=svg.getBoundingClientRect(),asp=Math.max(.3,r.width/Math.max(1,r.height));let h=1110,w=h*asp;if(w<900){w=900;h=w/asp}G.vb={x:389-w/2,y:470-h/2,w,h};applyVB()}
 function applyVB(){const v=G.vb;svg.setAttribute('viewBox',`${v.x} ${v.y} ${v.w} ${v.h}`)}
 function zoomAt(f,cx,cy){const v=G.vb,nw=Math.min(3200,Math.max(260,v.w/f)),k=nw/v.w;if(cx===undefined){cx=v.x+v.w/2;cy=v.y+v.h/2}v.x=cx-(cx-v.x)*k;v.y=cy-(cy-v.y)*k;v.w=nw;v.h*=k;applyVB()}
@@ -70,26 +56,6 @@ function armyPos(a){const s=G.s;let L=a.leg,acc=G.paused&&!G.acc?0:G.acc;
 function etaOf(a){const s=G.s;let w=a.leg?a.leg.cost-a.leg.done:0,cur=a.leg?a.leg.to:a.loc;for(const n of a.path){if(n===cur)continue;const e=Sim.edgeBetween(cur,n);if(e)w+=Sim.edgeWeeks(e,a.units,s.week);cur=n}return w}
 
 // ── 지도 그리기 ──
-function drawRegions(){
-  const s=G.s;let h='';
-  for(const id of D.RIDS){const R=s.regions[id],[x,y]=RP[id],cap=s.factions[R.controller].capitalId===id&&(FM[R.controller].kingdom||FM[R.controller].sovereign),g=garrText(id),L=LABEL[id],sel=G.sel&&G.sel.type==='region'&&G.sel.id===id;
-    const tx=L==='r'?20:L==='l'?-20:0,ty=L==='t'?-38:L==='b'?31:-1,an=L==='r'?'start':L==='l'?'end':'middle';
-    let pp='';for(let i=0;i<5;i++)pp+=`<rect class="pip${i<R.fort?'':' off'}" x="${-12+i*5}" y="${cap?15:14}" width="3.4" height="3.4"/>`;
-    h+=`<g class="rg" data-region="${id}" transform="translate(${x.toFixed(1)},${y.toFixed(1)})" tabindex="0" role="button" aria-label="${esc(R.name)}"><circle class="hit" r="26"/>
-    ${sel?'<circle class="selr" r="21"/>':''}${R.siege?'<circle class="siege" r="19"/>':''}
-    ${cap?`<rect class="ring" x="-13" y="-13" width="26" height="26" stroke="${fcol(R.overlord)}"/><rect x="-9.5" y="-9.5" width="19" height="19" fill="${fcol(R.controller)}"/>`:`<circle class="ring" r="12.5" stroke="${fcol(R.overlord)}"/><circle r="9" fill="${fcol(R.controller)}"/>`}
-    <text class="hj">${FM[R.controller].hanja}</text>${pp}${mobOf(R.controller)?'<text class="mob" x="9" y="-10">動</text>':''}
-    <text class="nm" x="${tx}" y="${ty}" text-anchor="${an}" dominant-baseline="${L==='t'?'auto':L==='b'?'hanging':'central'}">${esc(R.name)}</text>
-    <text class="gr ${g.c}" x="${tx}" y="${ty+(L==='t'?10:L==='b'?21:17)}" text-anchor="${an}" dominant-baseline="${L==='b'?'hanging':'central'}">${g.t}</text></g>`}
-  $('#regions').innerHTML=h;
-}
-function drawArmies(){
-  const s=G.s,vis=Sim.visibleArmies(s,me()),stack={};let h='';
-  for(const v of vis){const a=v.army,f=a?a.factionId:v.factionId,pos=a?armyPos(a):RP[v.loc],key=Math.round(pos[0]/6)+','+Math.round(pos[1]/6),k=stack[key]=(stack[key]||0)+1;
-    const x=pos[0]+12,y=pos[1]-6-(k-1)*17,sel=a&&G.sel&&G.sel.type==='army'&&G.sel.id===a.id;
-    h+=`<g class="army${v.conf==='estimated'?' est':''}${v.ghost?' ghost':''}${sel?' sel':''}" ${a?`data-army="${a.id}"`:''} transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><line class="pole" x1="0" y1="2" x2="0" y2="-24"/><path class="flag" d="M0,-24L21,-19L0,-13Z" fill="${fcol(f)}"/><text class="an" x="5" y="-27">${v.ghost?'? ':''}${armyTxt(v)}</text></g>`}
-  $('#armies').innerHTML=h;
-}
 function drawHL(){
   const s=G.s;let h='';const line=(from,path,cls)=>{let cur=from,d='';for(const n of path){d+=epath(cur,n);cur=n}return d?`<path class="hl ${cls||''}" d="${d}"/>`:''};
   if(G.sheet&&G.sheet.pv&&G.sheet.pv.ok&&G.sheet.pv.path)h+=line(G.sheet.from,G.sheet.pv.path);
@@ -98,102 +64,12 @@ function drawHL(){
 }
 
 // ── 상단 ──
-function drawTop(){
-  const s=G.s,F=s.factions[me()],ru=s.characters[F.rulerId],sm=Sim.factionSummary(s,me()),gw=sm.use>0?sm.grain/sm.use:99,obl=Sim.obligations(s,me()),dueSoon=obl.mine.some(e=>e.ob.due!==null&&e.ob.due-s.week<=3);
-  $('#plaque').innerHTML=`${seal(me())}<div><div class="who">${esc(ru.name)}</div><div class="ttl">${FM[me()].title} · ${esc(F.name)}${F.overlord?' · 종주 '+esc(fnm(F.overlord)):''}${sm.vassals.length?' · 섬기는 세력 '+sm.vassals.map(fnm).join('·'):''}</div></div>`;
-  $('#clock').innerHTML=`<div><div class="date">${Sim.dateStr(s.week)}</div><div class="wk">${Math.min(s.week+1,K.weeks)} / ${K.weeks}주차</div></div><div class="bar" aria-hidden="true"><i id="wkbar"></i></div>
-   <div class="seg" role="group" aria-label="시간 조절"><button data-act="pause" class="${G.paused?'on':''}" aria-label="일시정지">Ⅱ</button>${[1,2,4].map(v=>`<button data-act="speed" data-v="${v}" class="${!G.paused&&G.speed===v?'on':''}">${v}×</button>`).join('')}<button data-act="step" title="한 주만 넘기기">+1주</button></div>`;
-  $('#res').innerHTML=`<div class="cell"><div class="k">국고</div><div class="v">${fmt(F.treasury)}</div><div class="d ${sm.income-sm.gold<0?'bad':''}">수입 +${fmt(sm.income)} · 유지 −${fmt(sm.gold)}</div></div>
-   <div class="cell"><div class="k">군량</div><div class="v">${fmt(sm.grain)}</div><div class="d ${gw<8?'bad':''}">주당 −${fmt(sm.use)} · ${gw>=99?'충분':Math.floor(gw)+'주치'}</div></div>
-   <div class="cell"><div class="k">병력</div><div class="v">${fmt(sm.troops+sm.field)}</div><div class="d">주둔 ${fmt(sm.troops)} · 출정 ${fmt(sm.field)}</div></div>
-   <div class="cell" data-act="tab" data-v="court" role="button" tabindex="0"><div class="k">지킬 약속</div><div class="v ${dueSoon?'bad':''}">${obl.mine.length}건</div><div class="d ${dueSoon?'bad':''}">${obl.mine.length?(obl.mine[0].ob.due===null?'기한 없음':'가장 급한 것 '+Math.max(0,obl.mine[0].ob.due-s.week)+'주'):'밀린 약속 없음'}</div></div>`;
-}
 
 // ── 왼쪽: 선택한 거점·부대 ──
-function unitTable(u){return `<table class="u"><tr><th>병종</th>${UN.map(k=>`<th>${U[k].name}</th>`).join('')}<th>합계</th></tr><tr><td>병력</td>${UN.map(k=>`<td>${fmt(u[k])}</td>`).join('')}<td><b>${fmt(Sim.total(u))}</b></td></tr></table>`}
-function drawLeft(){
-  const s=G.s,el=$('#left');if(!G.sel){el.innerHTML='';return}
-  let h='';
-  if(G.sel.type==='region'){const R=s.regions[G.sel.id],c=R.controller,mine=c===me(),sh=share(me(),c),g=garrText(R.id),lord=R.lord&&s.characters[R.lord];
-    const chars=Object.values(s.characters).filter(x=>x.loc===R.id&&x.status==='active'&&(sh||x.id===R.lord));
-    h+=`<div style="display:flex;gap:10px;align-items:center">${seal(c,1)}<div><h2>${esc(R.name)}</h2><div class="sub">지금의 ${esc(R.modern)} · ${chip(c)} ${rel(c)}</div></div></div>
-    <dl class="kv" style="margin-top:12px"><dt>실제 지배</dt><dd>${esc(fnm(c))}</dd><dt>명목 종주</dt><dd>${esc(fnm(R.overlord))}${R.overlord!==c?' (자치 '+R.autonomy+')':''}</dd>
-    <dt>지형 · 성 방어</dt><dd>${R.terrain} · ${pips(R.fort)}</dd><dt>주둔 병력 ${g.tag}</dt><dd>${g.long}</dd>
-    ${!mine&&c!==me()?`<dt>우리와의 신뢰</dt><dd>${Sim.trust(s,me(),c)}</dd>`:''}</dl>`;
-    if(R.siege)h+=`<div class="warn">포위 ${s.week-R.siege.start+1}주째 · ${esc(fnm(R.siege.by))}군</div>`;
-    h+=relBlock(c);
-    if(Sim.sameBloc(s,me(),c)||s.armies&&Object.values(s.armies).some(a=>a.factionId===me()&&!a.leg&&a.loc===R.id&&Sim.atWar(s,me(),c)))h+=callBlock(R.id);
-    if(sh){const L=Sim.lordOf(s,R);h+=`<dl class="kv" style="margin-top:8px"><dt>성주</dt><dd>${L?esc(L.name)+' · 정치 '+L.po:'<span class="badc">비어 있음</span>'}</dd><dt>민심이 머무는 자리</dt><dd>${L?50+Math.round(L.po/4):45}</dd></dl>${Sim.defiant(s,R)?`<div class="warn">성주 ${esc(L.name)}의 충성이 ${L.loyalty}입니다. 군령을 따르지 않아 이곳에서는 출정도 모병도 할 수 없고, 세수도 절반만 들어옵니다.</div>`:''}`}
-    if(sh){h+=`<h3>주둔군</h3>${unitTable(R.garrison)}<dl class="kv" style="margin-top:8px"><dt>곳간 군량</dt><dd>${fmt(R.grain)}</dd><dt>민심</dt><dd>${R.morale}</dd><dt>주둔군 사기</dt><dd>${R.gMorale}</dd><dt>징병 가능</dt><dd>${fmt(R.manpower)}명</dd><dt>세수</dt><dd>주당 ${fmt(R.tax*R.morale/100*(1-R.autonomy/100*.7))}</dd></dl>`;
-      const ords=s.orders.filter(o=>o.status==='active'&&o.actorId===me()&&o.params.regionId===R.id);
-      if(ords.length)h+=`<h3>진행 중</h3>`+ords.map(o=>`<div class="sub">${o.type==='RECRUIT'?U[o.params.unit].name+' '+o.params.count+'명 모병':o.type==='FORTIFY'?'성 보강':o.type==='REQUISITION'?'군량 징발':o.type==='BUY_GRAIN'?'곡식 매입 '+o.params.grain:o.type} · ${Math.max(1,o.duration-(s.week-o.startedAt))}주 남음</div>`).join('')}
-    if(chars.length)h+=`<h3>인물</h3>`+chars.map(x=>`<div style="margin-bottom:4px"><b>${esc(x.name)}</b> <span class="sub">${esc(x.role)}${x.armyId==='appoint'?' · 부임 가는 중':x.armyId?' · 출정 중':''}${x.office?' · '+Sim.officeName(x.officeBy,x.office):''}</span><div class="sub">통솔 ${x.ld} · 무력 ${x.ma} · 지략 ${x.st} · 정치 ${x.po} · 신망 ${x.pr}${x.merit?' · 공적 '+x.merit:''}</div></div>`).join('');
-    const caps=sh?Object.values(s.characters).filter(x=>x.status==='captive'&&x.loc===R.id):[];
-    if(caps.length)h+=`<h3>갇힌 포로</h3>`+caps.map(x=>`<div class="sub"><b style="color:var(--text)">${esc(x.name)}</b> · ${esc(fnm(x.faction))} ${esc(x.role)} · 통솔 ${x.ld} 무력 ${x.ma} 지략 ${x.st}</div>`).join('')+`<div class="sub">포로의 처우(석방·회유·교환)는 아직 없습니다.</div>`;
-    h+=`<h3>길</h3>`+D.ADJ[R.id].map(n=>{const N=s.regions[n.to];return `<div class="sub" style="display:flex;justify-content:space-between"><span><a href="#" data-act="sel" data-id="${n.to}" style="color:var(--text)">${esc(N.name)}</a> ${esc(fnm(N.controller))}</span><span>${n.e.type}${n.e.note?' · '+esc(n.e.note):''} · ${Sim.edgeWeeks(n.e,{light:1,heavy:0,archer:0,cav:0},s.week)}주</span></div>`}).join('');
-    const eg=s.engagements.filter(e=>e.regionId===R.id&&engSeen(e)).slice(-1)[0];
-    if(eg)h+=`<h3>최근 공방전</h3><div class="sub">${Sim.dateStr(eg.start)}${eg.end!==null?' ~ '+Sim.dateStr(eg.end):' · 진행 중'} · ${resultFor(eg).label}</div><button class="btn sm" style="margin-top:6px" data-act="result" data-id="${eg.id}">전투 결과 보기</button>`;
-    h+=`<div class="note">사료 근거: ${esc(R.note)} <span class="tag">${{confirmed:'기록 있음',disputed:'해석 필요',designed:'게임용 재구성',traditional:'전승'}[R.conf]}</span></div>`;
-  }else{const a=s.armies[G.sel.id];if(!a){G.sel=null;el.innerHTML='';return}
-    const own=a.factionId===me(),sh=share(me(),a.factionId),cm=a.commanderId&&s.characters[a.commanderId],v=Sim.visibleArmies(s,me()).find(x=>x.army===a);
-    h+=`<div style="display:flex;gap:10px;align-items:center">${seal(a.factionId,1)}<div><h2>${esc(fnm(a.factionId))} 부대</h2><div class="sub">${esc(s.regions[a.loc].name)}${a.leg?' → '+esc(s.regions[a.leg.to].name)+' 행군 중':' 주둔'}</div></div></div>`;
-    if(sh){const up=Sim.upkeep(a.units),deps=(a.deputyIds||[]).map(id=>s.characters[id]).filter(Boolean),st=Sim.staff(cm||null,deps),lk=Sim.supplyLink(s,a);
-      h+=`<h3>편성</h3>${unitTable(a.units)}<h3>지휘부</h3><dl class="kv"><dt>주장</dt><dd>${cm?esc(cm.name)+' · 통솔 '+cm.ld:'없음 (통솔 50 취급)'}</dd>${deps.map((d,i)=>`<dt>부장 ${i+1}</dt><dd>${esc(d.name)} · 무력 ${d.ma} 지략 ${d.st}</dd>`).join('')}
-        <dt>전투 보정</dt><dd>지휘 ${pctS(cmdOf(st))} · 다병종 −${Math.round(Sim.mixPenalty(a.units,st.ld,deps.length)*100)}%</dd></dl>
-      <dl class="kv" style="margin-top:8px"><dt>사기</dt><dd>${Math.round(a.morale)}</dd><dt>휴대 군량</dt><dd class="${a.supply<up*2?'badc':''}">${fmt(a.supply)} · ${up?Math.floor(a.supply/up):0}주치</dd>
-        <dt>보급선</dt><dd class="${lk.linked?'':'badc'}">${lk.linked?'이어짐 ('+esc(s.regions[lk.via].name)+')':'끊김 '+(a.cut||0)+'주째'}</dd>
-        <dt>임무</dt><dd>${{attack:'공격',guard:'우군 지원',station:'주둔 이동',return:'회군'}[a.mission]}</dd>
-      ${a.leg||a.path.length?`<dt>목적지</dt><dd>${esc(s.regions[a.target].name)} · ${etaOf(a)}주 뒤</dd>`:''}</dl>
-      <h3>작전 방침</h3><div class="seg stance" role="group" aria-label="작전 방침">${Object.keys(Sim.STANCE).map(k=>`<button data-act="stance" data-v="${k}" class="${a.stance===k?'on':''}" ${own?'':'disabled'}>${k}</button>`).join('')}</div><div class="sub" style="margin-top:4px">${STDESC[a.stance]}</div>`}
-    else h+=`<dl class="kv" style="margin-top:12px"><dt>병력 <span class="tag ${v&&v.conf==='confirmed'?'c':'e'}">${v&&v.conf==='confirmed'?'확인':'추정'}</span></dt><dd>${v?(v.conf==='confirmed'?fmt(v.est)+'명':'약 '+fmt(v.est*.75)+'~'+fmt(v.est*1.25)+'명'):'알 수 없음'}</dd><dt>움직임</dt><dd>${a.leg?esc(s.regions[a.leg.to].name)+' 방면':'머무는 중'}</dd></dl><div class="note">적 부대의 편성과 지휘관은 알 수 없습니다. 병력은 관측한 범위에서만 표시됩니다.</div>`;
-  }
-  el.innerHTML=Sim.jo(`<div class="slab">${h}</div>`);
-}
 
 // ── 아래: 명령 ──
-function drawBar(){
-  const s=G.s,m=me();let h='';const b=(label,act,v,extra)=>`<button class="btn" data-act="${act}" ${extra||''} ${v&&!v.ok?`aria-disabled="true" data-why="${esc(v.reason)}"`:''}>${label}</button>`;
-  if(!G.sel)h+=`<div class="grp ctx"><b>거점이나 깃발을 고르세요</b><span class="sub">지도를 끌어 옮기고, 휠로 확대합니다. 스페이스바로 시간을 멈춥니다.</span></div>`;
-  else if(G.sel.type==='region'){const R=s.regions[G.sel.id],c=R.controller,mine=c===m;
-    h+=`<div class="grp ctx"><b>${esc(R.name)}</b><span class="sub">${esc(fnm(c))} · ${rel(c)}</span></div>`;
-    if(mine){h+=`<div class="grp"><span class="gl">군사</span><div class="btns">${b('출정','open-march',R.siege?{ok:false,reason:'포위된 거점에서는 출정할 수 없습니다.'}:null)}${b('모병','open-recruit',R.siege?{ok:false,reason:'포위된 거점에서는 모병할 수 없습니다.'}:null)}</div></div>
-      <div class="grp"><span class="gl">내정</span><div class="btns">${b('군량 징발 +'+K.reqGrain,'cmd',Sim.validate(s,m,'REQUISITION',{regionId:R.id}),'data-type="REQUISITION"')}${b('성 보강 (국고 '+K.repairCost+')','cmd',Sim.validate(s,m,'FORTIFY',{regionId:R.id}),'data-type="FORTIFY"')}${b('곡식 매입','open-buy',Sim.validate(s,m,'BUY_GRAIN',{regionId:R.id,gold:50}))}${b('민심 수습 (국고 '+K.pacifyCost+')','cmd',Sim.validate(s,m,'PACIFY',{regionId:R.id}),'data-type="PACIFY"')}</div></div>
-      <div class="grp"><span class="gl">인사</span><div class="btns">${b('성주 임명','open-appoint',R.siege?{ok:false,reason:'포위된 거점에는 보낼 수 없습니다.'}:null)}</div></div>`}
-    else{const hasSrc=D.RIDS.some(r=>s.regions[r].controller===m&&!s.regions[r].siege);
-      h+=`<div class="grp"><span class="gl">군사</span><div class="btns">${b(Sim.sameBloc(s,m,c)?'이곳으로 지원군':'이곳을 공격','open-march',hasSrc?null:{ok:false,reason:'출정할 수 있는 우리 거점이 없습니다.'})}</div></div>
-      <div class="grp"><span class="gl">첩보</span><div class="btns">${b('정찰 (국고 '+K.scoutCost+')','cmd',Sim.validate(s,m,'SCOUT',{regionId:R.id}),'data-type="SCOUT"')}${b('동향 파악 (국고 '+K.probeCost+')','probe',Sim.validate(s,m,'PROBE',{targetFactionId:c}))}</div></div>
-      <div class="grp"><span class="gl">외교</span><div class="btns">${b('협상','open-envoy')}</div></div>`}
-  }else{const a=s.armies[G.sel.id];if(a&&a.factionId===m){h+=`<div class="grp ctx"><b>우리 부대 ${fmt(Sim.total(a.units))}명</b><span class="sub">${esc(s.regions[a.loc].name)}${a.leg?' → '+esc(s.regions[a.leg.to].name):''}</span></div>
-      <div class="grp"><span class="gl">군사</span><div class="btns">${b('이동·공격','open-move',a.leg?{ok:false,reason:'행군 중인 부대에는 새 이동 명령을 내릴 수 없습니다. 회군만 가능합니다.'}:null)}${b('주둔군에 편입','acmd',Sim.validate(s,m,'GARRISON',{armyId:a.id}),'data-type="GARRISON"')}${b('회군','acmd',Sim.validate(s,m,'RETREAT',{armyId:a.id}),'data-type="RETREAT"')}</div></div>`}
-    else h+=`<div class="grp ctx"><b>${a?esc(fnm(a.factionId))+' 부대':'부대'}</b><span class="sub">남의 부대에는 명령할 수 없습니다.</span></div>`}
-  h+=`<div class="grp sys"><span class="gl">조정</span><div class="btns"><button class="btn" data-act="tab" data-v="court">국정</button><button class="btn" data-act="open-reward">논공행상</button></div></div><div class="grp"><span class="gl">기록</span><div class="btns"><button class="btn" data-act="save">저장</button><button class="btn" data-act="load">불러오기</button><button class="btn" data-act="new">처음으로</button><button class="btn fold" data-act="fold" data-v="left">정보</button><button class="btn fold" data-act="fold" data-v="right">전황</button></div></div>`;
-  $('#bar').innerHTML=h;
-}
 
 // ── 오른쪽: 전황·연대기·편성 ──
-function drawRight(){
-  const s=G.s,el=$('#right');
-  if(G.sheet){el.innerHTML=`<div id="sheet"></div>`;drawSheet();return}
-  const np=s.proposals.filter(p=>p.status==='pending'&&p.to===me()).length,tabs=[['report','보고'+(np?' ('+np+')':'')],['court','국정'],['battle','전투'],['chron','연대기'],['ai','AI']];
-  let h=`<div class="tabs" role="tablist">${tabs.map(t=>`<button role="tab" data-act="tab" data-v="${t[0]}" class="${G.tab===t[0]?'on':''}">${t[1]}</button>`).join('')}</div><div id="feed">`;
-  if(G.tab==='report'){const F=s.factions[me()],wars=D.FIDS.filter(f=>s.factions[f].alive&&Sim.atWar(s,me(),f));
-    h+=`<div class="it" style="background:var(--slab-2)"><span class="w">우리의 목표</span>${esc(F.strategicGoal)}<span class="w" style="margin-top:4px">${wars.length?'교전 중: '+wars.map(fnm).join('·'):'교전 중인 세력 없음'}${F.overlord?' · 종주 '+esc(fnm(F.overlord))+' (신뢰 '+Sim.trust(s,me(),F.overlord)+')':''}</span></div>`;
-    for(const p of s.proposals.filter(p=>p.status==='pending'&&p.to===me()))h+=propCard(p);
-    const rp=s.reports.slice(-60).reverse();
-    h+=rp.length?rp.map(r=>`<div class="it${r.urgent?' urgent':''}" ${r.regionId?`data-act="sel" data-id="${r.regionId}" data-region="1"`:''}><span class="w">${Sim.dateStr(r.week)}</span>${esc(r.text)}</div>`).join(''):`<div class="it sub">아직 보고가 없습니다. 시간을 흘려 보내거나 명령을 내리세요.</div>`;
-    h+=`<div class="it sub"><label><input type="checkbox" id="ap" ${G.autoPause?'checked':''}> 중요한 보고가 오면 시간을 멈춤</label></div>`;
-  }else if(G.tab==='court'){h+=courtTab();
-  }else if(G.tab==='battle'){
-    const list=s.engagements.filter(engSeen).slice().reverse();
-    h+=list.length?list.map(e=>{const r=resultFor(e);return `<div class="it" data-act="result" data-id="${e.id}" data-region="1"><span class="w">${Sim.dateStr(e.start)}${e.end!==null?' ~ '+Sim.dateStr(e.end):' · 진행 중'} · ${e.rounds}주 교전</span><b>${esc(s.regions[e.regionId].name)} 공방전</b> <span class="tag ${r.cls}">${r.label}</span><span class="w">${e.attackers.map(fnm).join('·')} → ${e.defenders.map(fnm).join('·')} · 잃은 병력 공 ${fmt(tot(e.lost.atk))} / 수 ${fmt(tot(e.lost.def))}</span></div>`}).join(''):`<div class="it sub">아직 지켜본 공방전이 없습니다. 우리 편이 싸운 공방전이 여기에 쌓입니다.</div>`;
-  }else if(G.tab==='chron'){
-    h+=s.chronicle.slice().reverse().map(c=>`<div class="it" ${c.regionId?`data-act="sel" data-id="${c.regionId}" data-region="1"`:''}><span class="w">${Sim.dateStr(c.week)}${c.cause?' · 원인: '+esc(c.cause):''}</span>${esc(c.text)}${c.stateChanges?`<span class="w">변화: ${esc(c.stateChanges)}</span>`:''}</div>`).join('');
-  }else{
-    h+=`<div class="it sub">개발 확인용입니다. 다른 세력의 속마음이 그대로 보이므로 실제 게임에서는 숨깁니다.</div>`;
-    h+=s.log.filter(l=>l.ok&&l.faction!==me()&&l.why&&l.type!=='GARRISON').slice(-80).reverse().map(l=>`<div class="it dev"><span class="w">${Sim.dateStr(l.week)} · ${esc(fnm(l.faction))} · 효용 ${l.u}</span><b>${{MARCH:'출정',RECRUIT:'모병',FORTIFY:'성 보강',SCOUT:'정찰',REQUISITION:'징발',RETREAT:'회군',BUY_GRAIN:'곡식 매입',CALL_ARMS:'동원령',REWARD:'포상',APPOINT:'성주 임명',PACIFY:'민심 수습',COUNTER:'역제안 수락'}[l.type]||(l.type==='ENVOY'?D.KINDNAME[l.params.kind]:l.type)}</b> ${esc(l.why)}</div>`).join('');
-  }
-  el.innerHTML=Sim.jo(h+'</div>');
-}
 function pvMarch(){const sh=G.sheet,s=G.s;sh.pv=Sim.previewMarch(s,me(),{fromRegionId:sh.from,targetRegionId:sh.target,units:sh.units,commanderId:sh.commanderId||null,deputyIds:sh.deps.filter(Boolean),stance:sh.stance,breakTruce:!!sh.breakTruce});
   const p=sh.pv,el=$('#pv');if(!el)return;
   if(!p.ok){el.innerHTML=`<div class="warn">${esc(p.reason)}</div>${p.code==='truce'?`<button class="btn sm" style="margin-top:6px" data-act="break-truce">휴전을 깨고 출정한다</button><div class="sub">군이 그 땅에 닿는 순간 휴전이 깨집니다. 정통성 −8, 상대 신뢰 −30, 다른 모든 세력의 신뢰 −10, 평판 하락.</div>`:''}`;J(el);$('#go').setAttribute('aria-disabled','true');$('#go').dataset.why=p.reason;UN.forEach(k=>{const e=$('#ef-'+k);if(e){e.textContent='—';e.className=''}});drawHL();return}
@@ -221,11 +97,11 @@ function drawSheet(){
     h+=`<h2>출정 편성</h2><div class="sub">지도에서 목표 거점을 눌러도 됩니다.</div>
     <label class="fld" for="m-from">출발</label><select id="m-from">${srcs.map(r=>`<option value="${r}" ${r===sh.from?'selected':''}>${esc(s.regions[r].name)} · 주둔 ${fmt(Sim.total(s.regions[r].garrison))}</option>`).join('')}</select>
     <label class="fld" for="m-to">목표</label><select id="m-to"><option value="">고르세요</option>${tg.map(t=>`<option value="${t.r}" ${t.r===sh.target?'selected':''} ${t.p?'':'disabled'}>${esc(t.T.name)} · ${t.kind} · ${t.p?t.p.weeks+'주':'길 없음'}</option>`).join('')}</select>
-    <label class="fld" for="m-cmd">주장 · 통솔이 지휘 보정을 정합니다</label><select id="m-cmd"><option value="">없음 (통솔 50 취급)</option>${chars.map(c=>`<option value="${c.id}" ${c.id===sh.commanderId?'selected':''}>${esc(c.name)} · 통솔 ${c.ld} 무력 ${c.ma} 지략 ${c.st}</option>`).join('')}</select>
+    <label class="fld" for="m-cmd">주장 · 통솔이 지휘 보정을 정합니다</label><select id="m-cmd"><option value="">없음 (통솔 50 취급)</option>${chars.map(c=>{const pr=Dm.primaryOf(s,c.id);return `<option value="${c.id}" ${c.id===sh.commanderId?'selected':''}>${esc(c.name)} · 통솔 ${c.ld} 무력 ${c.ma} 지략 ${c.st}${pr&&pr.type!=='RULER'?' · 현직 '+esc(pr.label):''}</option>`}).join('')}</select>${[sh.commanderId].concat(sh.deps).filter(Boolean).map(id=>Dm.primaryOf(s,id)).filter(x=>x&&x.type!=='RULER').map(x=>`<div class="warn">출정하면 ${esc(x.label)} 자리가 빕니다.</div>`).join('')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label class="fld" for="m-dep0">부장 1</label><select id="m-dep0" ${sh.commanderId?'':'disabled'}><option value="">없음</option>${chars.filter(c=>c.id!==sh.commanderId&&c.id!==sh.deps[1]).map(c=>`<option value="${c.id}" ${c.id===sh.deps[0]?'selected':''}>${esc(c.name)} 무${c.ma} 지${c.st}</option>`).join('')}</select></div>
     <div><label class="fld" for="m-dep1">부장 2</label><select id="m-dep1" ${sh.commanderId?'':'disabled'}><option value="">없음</option>${chars.filter(c=>c.id!==sh.commanderId&&c.id!==sh.deps[0]).map(c=>`<option value="${c.id}" ${c.id===sh.deps[1]?'selected':''}>${esc(c.name)} 무${c.ma} 지${c.st}</option>`).join('')}</select></div></div>
     <div class="sub" style="margin-top:3px">부장은 선봉(최고 무력)과 참모(최고 지략)를 맡고, 여러 병종을 섞을 때의 지휘 부담을 덜어 줍니다.</div>
-    <h3>병종별 수량 <span style="display:flex;gap:4px;letter-spacing:0"><button class="btn sm" data-act="mq" data-v="0">비우기</button><button class="btn sm" data-act="mq" data-v="0.5">절반</button><button class="btn sm" data-act="mq" data-v="1">전부</button></span></h3>${UN.map(k=>`<div class="urow"><label for="u-${k}" title="${esc(U[k].note)}">${U[k].name}<small>전력 ${U[k].power.toFixed(1)} · <span id="ef-${k}">—</span></small></label><input type="range" id="r-${k}" data-u="${k}" min="0" max="${R.garrison[k]}" step="10" value="${sh.units[k]}" aria-label="${U[k].name} 수량"><input type="number" id="u-${k}" data-u="${k}" min="0" max="${R.garrison[k]}" step="10" value="${sh.units[k]}"></div>`).join('')}
+    <h3>병종별 수량 <span style="display:flex;gap:4px;letter-spacing:0"><button class="btn sm" data-act="mq" data-v="0">비우기</button><button class="btn sm" data-act="mq" data-v="0.5">절반</button><button class="btn sm" data-act="mq" data-v="1">전부</button></span></h3>${UNV(R.garrison).map(k=>`<div class="urow"><label for="u-${k}" title="${esc(U[k].note)}">${U[k].name}<small>전력 ${U[k].power.toFixed(1)} · <span id="ef-${k}">—</span></small></label><input type="range" id="r-${k}" data-u="${k}" min="0" max="${R.garrison[k]}" step="10" value="${sh.units[k]}" aria-label="${U[k].name} 수량"><input type="number" id="u-${k}" data-u="${k}" min="0" max="${R.garrison[k]}" step="10" value="${sh.units[k]}"></div>`).join('')}
     <label class="fld" for="m-st">작전 방침</label><select id="m-st">${Object.keys(Sim.STANCE).map(k=>`<option value="${k}" ${sh.stance===k?'selected':''}>${k}: ${STDESC[k]}</option>`).join('')}</select>
     <div class="pv" id="pv"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn pri" id="go" data-act="go-march">출정</button><button class="btn" data-act="close">취소</button></div>`;
     el.innerHTML=h;pvMarch();return}
@@ -249,6 +125,7 @@ function drawSheet(){
     <div class="pv" id="by-pv"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn pri" id="by-go" data-act="go-buy">사들인다</button><button class="btn" data-act="close">취소</button></div>`;
     el.innerHTML=h;pvBuy();return}
   if(sh.type==='envoy'){el.innerHTML=Sim.jo(negoSheet());return}
+  if(sh.type==='govern'){el.innerHTML=Sim.jo(governSheet());return}
   if(sh.type==='reward'){el.innerHTML=Sim.jo(rewardSheet());return}
   if(sh.type==='appoint'){el.innerHTML=Sim.jo(appointSheet());return}
 }
@@ -358,7 +235,7 @@ const OUT={capture:'함락',repulsed:'격퇴',rout:'궤멸',lifted:'포위 풀�
 const STDESC={공세:'전력 +10%, 손실 +15%, 매복에 잘 걸림, 사기 25까지 버팀',신중:'기본 전력, 매복 위험 낮음, 사기 35 이하면 물러남',방어:'수비할 때 +12%, 공격할 때 −10%, 손실 −10%',지연:'전력 −15%, 손실 −30%, 추격 피해 적음, 사기 45 이하면 물러남'};
 const pctS=v=>(v>=1?'+':'−')+Math.abs(Math.round((v-1)*100))+'%';
 const cmdOf=st=>Math.min(1.2,Math.max(0.8,1+0.004*(st.ld-50)));
-const tot=u=>u.light+u.heavy+u.archer+u.cav;
+const tot=u=>u.light+u.heavy+u.archer+u.cav+(u.adv||0);
 function engSeen(e){return e.attackers.concat(e.defenders).some(f=>share(me(),f))}
 function resultFor(e){const m=me(),inA=e.attackers.some(f=>share(m,f)),inD=e.defenders.some(f=>share(m,f));
   if(e.end===null)return{label:'교전 중',cls:''};
@@ -394,20 +271,10 @@ function resultSheet(id){
 function pvBuy(){const s=G.s,sh=G.sheet,v=Sim.validate(s,me(),'BUY_GRAIN',{regionId:sh.from,gold:sh.gold}),go=$('#by-go'),sm=Sim.factionSummary(s,me());
   $('#by-pv').innerHTML=`<dl class="kv"><dt>들어올 군량</dt><dd>${fmt(sh.gold*K.grainPerGold)}</dd><dt>지금 군량</dt><dd>${fmt(sm.grain)} · ${sm.use?Math.floor(sm.grain/sm.use):'∞'}주치</dd><dt>사들인 뒤</dt><dd>${sm.use?Math.floor((sm.grain+sh.gold*K.grainPerGold)/sm.use):'∞'}주치</dd></dl>${v.ok?'':`<div class="warn">${esc(v.reason)}</div>`}`;
   if(v.ok)go.removeAttribute('aria-disabled');else{go.setAttribute('aria-disabled','true');go.dataset.why=v.reason}}
-function drawLegend(){$('#legend').innerHTML=`<span><svg width="26" height="26" viewBox="-14 -14 28 28"><circle r="11.5" fill="#e6e2d3" stroke="#1f4e79" stroke-width="3"/><circle r="8" fill="#2f6b4f"/></svg> 속 = 실제 지배, 테 = 명목 종주</span><span><span class="tag c">확인</span> 본 숫자 · <span class="tag e">추정</span> 어림 · <span class="tag u">미확인</span></span><span>■ 성 방어 단계</span>`}
-function drawAll(){if(!G.s)return;drawRegions();drawArmies();drawHL();drawTop();drawLeft();drawBar();drawRight()}
 function J(el){if(el&&/\((가|를|는|과|으)\)/.test(el.innerHTML))el.innerHTML=Sim.jo(el.innerHTML)}
-let toastT=0;function toast(t){const el=$('#toast');el.textContent=Sim.jo(t);el.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>el.style.display='none',3600)}
+let toastT=0;function toast(t){const el=$('#toast');el.textContent=Sim.jo(t);el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,4200)}
 
 // ── 시작·종료 화면 ──
-function showStart(){
-  G.veil='start';$('#app').classList.add('idle');const au=store.get(AUTO),tmp=Sim.newGame('goryeo',1);
-  const card=f=>{const F=tmp.factions[f],sm=Sim.factionSummary(tmp,f),ru=tmp.characters[F.rulerId];return `<button class="card" data-act="pick" data-v="${f}"><span class="hd"><span class="seal" style="background:${FM[f].color}">${FM[f].hanja}</span><span><span class="nm">${esc(F.name)}</span><br><span class="sub">${FM[f].title} ${esc(ru.name)}</span></span></span><p>${FM[f].blurb}</p><span class="st"><span><b>${sm.regions}</b>거점</span><span><b>${fmt(sm.troops)}</b>병력</span><span><b>${fmt(sm.grain)}</b>군량</span><span><b>${fmt(F.treasury)}</b>국고</span></span></button>`};
-  $('#veil').style.display='grid';
-  $('#veil').innerHTML=`<div class="inner"><h1><small>後三國 · R3 시제품</small>천하의 주인</h1><p class="lede">929년 가을, 고창 전역. 60주 동안 여덟 세력이 같은 규칙으로 움직입니다. 고른 세력의 군주가 되어 장수와 병종을 짜 보내고, 조건을 걸어 호족과 약속을 맺으세요. 지킨 약속과 어긴 약속은 장부에 남습니다. 싸움의 때와 장소, 승패는 정해져 있지 않습니다.</p>
-  <div class="cards">${['goryeo','hubaekje','gochang'].map(card).join('')}</div>
-  <div class="opts"><label for="seed">난수 시드</label><input type="number" id="seed" value="${929}" min="1" max="999999"><span>같은 시드와 같은 명령이면 같은 전개가 나옵니다.</span>${au&&au.s&&au.s.v===3?`<button class="btn" data-act="continue">이어하기 · ${esc(au.s.factions[au.s.playerFactionId].name)} ${Sim.dateStr(au.s.week)}</button>`:''}</div></div>`;
-}
 function showEnd(){
   const s=G.s;G.veil='end';G.paused=true;
   const rows=D.FIDS.map(f=>{const F=s.factions[f],sm=Sim.factionSummary(s,f);return `<tr><td>${chip(f)}${f===me()?' ◀':''}</td><td>${F.alive?sm.regions:'멸망'}</td><td>${fmt(sm.troops+sm.field)}</td><td>${F.overlord?esc(fnm(F.overlord)):'—'}</td><td>${sm.vassals.map(fnm).join('·')||'—'}</td></tr>`}).join('');
@@ -418,24 +285,11 @@ function showEnd(){
   <h3>이번 판의 굵은 사건 ${key.length}건</h3><div style="max-height:220px;overflow:auto">${key.map(c=>`<div class="sub">${Sim.dateStr(c.week)} · ${esc(c.text)}</div>`).join('')||'<div class="sub">큰 사건 없이 지나갔습니다.</div>'}</div>
   <div style="display:flex;gap:8px;margin-top:16px"><button class="btn pri" data-act="new">새 판 시작</button><button class="btn" data-act="peek">지도 살펴보기</button></div></div>`;
 }
-function start(s){$('#app').classList.remove('idle');G.s=s;G.sel={type:'region',id:s.factions[s.playerFactionId].capitalId};G.sheet=null;G.tab='report';G.acc=0;G.paused=true;G.seen=s.reports.length;G.veil=null;$('#veil').style.display='none';fit();drawAll();if(s.over)showEnd()}
 
 // ── 시간 ──
-function doTick(){
-  const s=G.s;if(!s||s.over)return;Sim.tick(s);
-  const urg=s.reports.filter(r=>r.week===s.week&&r.urgent);G.seen=s.reports.length;
-  if(G.sheet&&G.sheet.type==='move'&&!s.armies[G.sheet.armyId])G.sheet=null;
-  if(G.sel&&G.sel.type==='army'&&!s.armies[G.sel.id])G.sel=null;
-  store.set(AUTO,{s});
-  const fin=(s.pendingResults||[]).map(id=>Sim.engById(s,id)).filter(e=>e&&e.attackers.concat(e.defenders).indexOf(me())>=0);
-  if(fin.length&&(!G.sheet||G.sheet.type==='result')){G.sheet={type:'result',id:fin[fin.length-1].id};if(G.autoPause)G.paused=true}
-  else if(urg.length&&G.autoPause&&!G.paused){G.paused=true;G.tab='report';toast('시간을 멈췄습니다: '+urg[urg.length-1].text)}
-  if(!G.sheet&&s.proposals.some(p=>p.to===me()&&p.status==='pending'&&p.week===s.week)){G.tab='report';if(G.autoPause)G.paused=true}
-  drawAll();if(s.over)showEnd();
-}
 let last=performance.now(),fc=0;
 function frame(now){const dt=Math.min(.25,(now-last)/1000);last=now;
-  if(G.s&&!G.paused&&!G.veil&&!G.s.over){G.acc+=dt*G.speed/K.week_s;if(G.acc>=1){G.acc=0;doTick()}else if(++fc%4===0&&Object.keys(G.s.armies).length)drawArmies();const b=$('#wkbar');if(b)b.style.width=(G.acc*100).toFixed(1)+'%'}
+  if(G.s&&!G.paused&&!G.veil&&!G.s.over&&!G.picker){G.acc+=dt*G.speed/K.week_s;if(G.acc>=1){G.acc=0;doTick()}else if(++fc%4===0&&Object.keys(G.s.armies).length)drawArmies();const b=$('#wkbar');if(b)b.style.width=(G.acc*100).toFixed(1)+'%'}
   requestAnimationFrame(frame)}
 K.week_s=25;
 
@@ -450,19 +304,19 @@ document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;if(t.tagName==='A')e.preventDefault();
   if(t.getAttribute('aria-disabled')==='true'){toast(t.dataset.why||'지금은 할 수 없습니다.');return}
   const a=t.dataset.act,v=t.dataset.v,s=G.s;
-  if(a==='pick'){const seed=parseInt(($('#seed')||{}).value,10)||929;start(Sim.newGame(v,seed));toast('시간은 멈춰 있습니다. 준비가 되면 1×를 누르세요.')}
-  else if(a==='continue'){const au=store.get(AUTO);if(au&&au.s&&au.s.v===3)start(au.s)}
+  if(a==='pick'){const seed=parseInt(($('#seed')||{}).value,10)||929;start(Sim.newGame(v,seed,startOpts()));toast('시간은 멈춰 있습니다. 준비가 되면 1×를 누르세요.')}
+  else if(a==='continue'){const au=store.get(AUTO),ms=au&&au.s&&Sim.migrate(au.s);if(ms)start(ms)}
   else if(a==='new'){G.paused=true;showStart()}
   else if(a==='peek'){G.veil=null;$('#veil').style.display='none'}
   else if(a==='pause'){G.paused=true;drawTop()}
-  else if(a==='speed'){if(s.over){toast('캠페인이 끝났습니다.');return}G.speed=+v;G.paused=false;drawTop()}
-  else if(a==='step'){if(s.over){toast('캠페인이 끝났습니다.');return}G.paused=true;G.acc=0;doTick()}
+  else if(a==='speed'){if(gateHold())return;if(s.over){toast('캠페인이 끝났습니다.');return}G.speed=+v;G.paused=false;drawTop()}
+  else if(a==='step'){if(gateHold())return;if(s.over){toast('캠페인이 끝났습니다.');return}G.paused=true;G.acc=0;doTick()}
   else if(a==='zoom')zoomAt(+v); else if(a==='fit')fit();
-  else if(a==='tab'){G.tab=v;drawRight()}
+  else if(a==='tab'){if(G.tab===v&&G.rightOpen&&!G.sheet)G.rightOpen=false;else{G.tab=v;G.sheet=null;G.rightOpen=true}drawAll()}
   else if(a==='sel'){G.sel={type:'region',id:t.dataset.id};const p=RP[t.dataset.id],vb=G.vb;if(p[0]<vb.x+vb.w*.2||p[0]>vb.x+vb.w*.8||p[1]<vb.y+vb.h*.15||p[1]>vb.y+vb.h*.85){vb.x=p[0]-vb.w/2;vb.y=p[1]-vb.h/2;applyVB()}drawAll()}
   else if(a==='fold'){$('#'+v).classList.toggle('closed')}
   else if(a==='save'){toast(store.set(SAVE,{s})?'저장했습니다. 이 브라우저에만 남습니다.':'이 환경에서는 저장할 수 없습니다.')}
-  else if(a==='load'){const sv=store.get(SAVE);if(sv&&sv.s&&sv.s.v===3){start(sv.s);toast('불러왔습니다: '+Sim.dateStr(sv.s.week))}else toast(sv&&sv.s?'예전 버전에서 저장한 판은 이어할 수 없습니다.':'저장한 판이 없습니다.')}
+  else if(a==='load'){const sv=store.get(SAVE),ms=sv&&sv.s&&Sim.migrate(sv.s);if(ms){start(ms);toast('불러왔습니다: '+Sim.dateStr(ms.week)+(ms.migratedFrom?' (예전 판을 새 형식으로 옮겼습니다)':''))}else toast(sv&&sv.s?'예전 버전에서 저장한 판은 이어할 수 없습니다.':'저장한 판이 없습니다.')}
   else if(a==='close'){G.sheet=null;drawAll()}
   else if(a==='cmd'){const R=s.regions[G.sel.id];act(t.dataset.type,{regionId:R.id},{PACIFY:R.name+'의 민심을 수습합니다. '+K.pacifyWeeks+'주 걸립니다.',REQUISITION:R.name+'에서 군량을 거둡니다. 다음 주에 들어옵니다.',FORTIFY:R.name+' 성 보강을 시작했습니다. '+K.repairWeeks+'주 걸립니다.',SCOUT:R.name+'(으)로 정찰병을 보냈습니다.'}[t.dataset.type])}
   else if(a==='acmd'){act(t.dataset.type,{armyId:G.sel.id},t.dataset.type==='GARRISON'?'부대가 주둔군에 합류했습니다.':'가까운 우리 거점으로 회군합니다.')}
@@ -475,7 +329,7 @@ document.addEventListener('click',e=>{
   else if(a==='probe'){act('PROBE',{targetFactionId:s.regions[G.sel.id].controller},'사람을 보냈습니다. '+K.probeWeeks+'주 뒤 동향 보고가 옵니다.')}
   else if(a==='open-reward'||a==='go-reward-open'){G.sheet={type:'reward',charId:t.dataset.id||''};drawAll()}
   else if(a==='go-reward'){const c=s.characters[t.dataset.id];act('REWARD',{charId:c.id,kind:v},c.name+'에게 '+(v==='office'?'관직을 내렸습니다.':'재물을 내렸습니다.'))}
-  else if(a==='open-appoint'){G.sheet={type:'appoint',from:G.sel.id};drawAll()}
+  else if(a==='open-appoint'){openPicker('city:'+G.sel.id+':governor')}
   else if(a==='go-appoint'){const c=s.characters[t.dataset.id],r=act('APPOINT',{regionId:G.sheet.from,charId:c.id},c.name+'이(가) 부임길에 올랐습니다.');if(r.ok){G.sheet=null;drawAll()}}
   else if(a==='go-heir'){const c=s.characters[t.dataset.id];act('HEIR',{charId:c.id},c.name+'을(를) 후계로 세웠습니다.')}
   else if(a==='call-arms'){act('CALL_ARMS',{vassalId:t.dataset.id,regionId:t.dataset.rid},s.factions[t.dataset.id].name+'에 동원령을 보냈습니다. 다음 주에 답이 옵니다.')}
@@ -517,13 +371,14 @@ document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.tar
 svg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const rg=e.target.closest('[data-region]');if(rg){e.preventDefault();pick(rg)}}});
 svg.addEventListener('wheel',e=>{e.preventDefault();const w=toWorld(e.clientX,e.clientY);zoomAt(e.deltaY<0?1.15:1/1.15,w[0],w[1])},{passive:false});
 document.addEventListener('keydown',e=>{if(!G.s||G.veil||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
-  if(e.code==='Space'&&!e.target.closest('button,[data-region]')){e.preventDefault();if(G.s.over)return;G.paused=!G.paused;drawTop()}
-  else if(e.key==='Escape'&&G.sheet){G.sheet=null;drawAll()}});
+  if(e.code==='Space'&&!e.target.closest('button,[data-region]')){e.preventDefault();if(G.s.over||G.picker||gateHold())return;G.paused=!G.paused;drawTop()}
+  else if(e.key==='Escape')escKey()});
 window.addEventListener('resize',()=>{if(G.vb)fit()});
 
+/*@@DOMESTIC_UI@@*/
 // ── 부팅 ──
-buildMap();drawLegend();fit();
-function boot(data){if(data&&data.s&&data.s.v===3){start(data.s)}else{G.s=Sim.newGame('goryeo',929);drawRegions();drawArmies();G.s=null;showStart()}requestAnimationFrame(frame)}
+buildMap();fit();
+function boot(data){const ms=data&&data.s&&Sim.migrate(data.s);if(ms){start(ms)}else{G.s=Sim.newGame('goryeo',929);drawRegions();drawArmies();G.s=null;showStart()}requestAnimationFrame(frame)}
 if(window.claude&&window.claude.hot&&window.claude.hot.snapshot)window.claude.hot.snapshot(()=>({s:G.s}));
 if(window.claude&&window.claude.hot&&window.claude.hot.ready)window.claude.hot.ready(boot);else boot((window.claude&&window.claude.hot&&window.claude.hot.data)||{});
 window.__G=G;

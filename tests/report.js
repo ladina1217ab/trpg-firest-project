@@ -1,0 +1,15 @@
+// QA 증거(JSON)에서 납품 문서를 만든다. 실행: node tests/qa.js && node tests/qa_ui.js && node tests/report.js
+const fs = require('fs'), path = require('path'), D = path.join(__dirname, '..', 'BUILD_G1_DELIVERY'), E = path.join(D, 'evidence');
+const eng = JSON.parse(fs.readFileSync(path.join(E, 'qa_engine.json'))).results, ui = JSON.parse(fs.readFileSync(path.join(E, 'qa_ui.json'))).results;
+const spec = ['G1-BASE-01', 'G1-ECON-01', 'G1-ECON-02', 'G1-TIME-01', 'G1-TIME-02', 'G1-TIME-03', 'G1-TIME-04', 'G1-OPK-01', 'G1-OPK-02', 'G1-OPK-03', 'G1-OPK-04', 'G1-GOV-01', 'G1-GOV-02', 'G1-GOV-03', 'G1-CITY-01', 'G1-CITY-02', 'G1-NAT-01', 'G1-NAT-02', 'G1-NAT-03', 'G1-NAT-04', 'G1-AI-01', 'G1-DETER-01', 'G1-PLAY-01', 'G1-REG-01', 'G1-UI-01'];
+const all = eng.concat(ui), of = id => all.filter(r => r.id === id || r.id.indexOf(id + '(') === 0 || r.id.indexOf(id + ' ') === 0);
+const rows = spec.map(id => { const rs = of(id), st = !rs.length ? 'NOT_RUN' : rs.every(r => r.status === 'PASS') ? 'PASS' : rs.some(r => r.status === 'FAIL') ? 'FAIL' : 'BLOCKED'; return { id, status: st, by: rs.map(r => r.id + (eng.indexOf(r) >= 0 ? ' [엔진]' : ' [화면]')).join(', '), note: rs.map(r => r.note).filter(Boolean).join(' ') }; });
+let md = '# BUILD-G1 QA 보고\n\n시드 929 고정. 엔진 테스트는 `node tests/qa.js`, 화면 테스트는 `node tests/qa_ui.js`(Chromium)로 다시 돌릴 수 있다. 증거 원본은 `evidence/qa_engine.json`, `evidence/qa_ui.json`, 스크린샷은 `evidence/*.png`.\n\n';
+md += '**' + rows.filter(r => r.status === 'PASS').length + '/' + rows.length + ' PASS.** 이 표는 자동 테스트 판정이다. 사람이 해 본 플레이테스트와 GQS 점수는 없다(미측정).\n\n| QA ID | 판정 | 실행한 테스트 | 비고 |\n|---|---|---|---|\n' + rows.map(r => `| ${r.id} | ${r.status} | ${r.by} | ${r.note} |`).join('\n');
+md += '\n\n추가로 돌린 것: ' + all.filter(r => !spec.some(id => r.id.indexOf(id) === 0)).map(r => r.id + ' ' + r.status).join(', ') + '\n';
+fs.writeFileSync(path.join(D, 'QA_REPORT.md'), md);
+fs.writeFileSync(path.join(D, 'BUILD_G1_QA_ACCEPTANCE_result.json'), JSON.stringify({ metadata: { version: '0.1', qaState: 'RUN', scenario: 'S04_0929_10', seed: 929, gqs: 'NOT_MEASURED' }, tests: rows.map(r => ({ id: r.id, status: r.status, evidence: r.by, note: r.note })) }, null, 1));
+const ec = eng.find(r => r.id === 'G1-ECON-01').evidence;
+fs.writeFileSync(path.join(D, 'ECONOMY_LEDGER_DIFF.md'), '# 주간 원장과 월말 결산 비교 (929년 10월, 무행동, 시드 929)\n\n주마다 기록한 원장의 합과 실제 국고·군량 증감을 세력별로 견준다. 결산 뒤에 붙은 입금은 0건이다.\n\n| 세력 | 국고 원장 합 | 국고 실제 증감 | 군량 원장 합 | 군량 실제 증감 | 국고 미분류 | 군량 미분류 |\n|---|---|---|---|---|---|---|\n' + ec.rows.map(r => `| ${r.faction} | ${r.goldLedgerSum} | ${r.goldActualDelta} | ${r.grainLedgerSum} | ${r.grainActualDelta} | ${r.goldUnclassified} | ${r.grainUnclassified} |`).join('\n') + '\n\n## 고려의 분류별 내역\n\n국고: `' + JSON.stringify(ec.rows[0].gold) + '`\n\n군량: `' + JSON.stringify(ec.rows[0].grain) + '`\n\n군량의 "미분류(etc)"는 점령으로 곳간이 넘어가거나 부대가 흩어질 때처럼 분류하지 않은 이동을 주 마감에서 맞춘 값이다. 이 달에는 0이다.\n');
+fs.copyFileSync(path.join(__dirname, '..', 'dist', 'index.html'), path.join(D, 'preview.html'));
+console.log(md.split('\n').slice(4, 6).join('\n'));
