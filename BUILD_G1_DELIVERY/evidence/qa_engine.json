@@ -1,0 +1,1512 @@
+{
+ "seed": 929,
+ "scenario": "S04_0929_10",
+ "results": [
+  {
+   "id": "G1-BASE-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": [
+    {
+     "player": "goryeo",
+     "factions": 8,
+     "regions": 20,
+     "characters": 26,
+     "units4Unchanged": true,
+     "treasury": [
+      1200,
+      1400,
+      250
+     ],
+     "initialSameAsBaseline": true,
+     "garrisonSameAsBaseline": true,
+     "aiOrdersIn3Weeks": 22
+    },
+    {
+     "player": "hubaekje",
+     "factions": 8,
+     "regions": 20,
+     "characters": 26,
+     "units4Unchanged": true,
+     "treasury": [
+      1200,
+      1400,
+      250
+     ],
+     "initialSameAsBaseline": true,
+     "garrisonSameAsBaseline": true,
+     "aiOrdersIn3Weeks": 23
+    },
+    {
+     "player": "gochang",
+     "factions": 8,
+     "regions": 20,
+     "characters": 26,
+     "units4Unchanged": true,
+     "treasury": [
+      1200,
+      1400,
+      250
+     ],
+     "initialSameAsBaseline": true,
+     "garrisonSameAsBaseline": true,
+     "aiOrdersIn3Weeks": 34
+    }
+   ]
+  },
+  {
+   "id": "G1-ECON-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "month": "0929-10",
+    "weeks": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "rows": [
+     {
+      "faction": "goryeo",
+      "goldLedgerSum": 441.48,
+      "goldActualDelta": 441.48,
+      "grainLedgerSum": 10771.2,
+      "grainActualDelta": 10771.2,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "tax": 776.48,
+       "upkeep": -268,
+       "admin": -67
+      },
+      "grain": {
+       "garrison": -2428.8,
+       "harvest": 13200
+      }
+     },
+     {
+      "faction": "hubaekje",
+      "goldLedgerSum": -373,
+      "goldActualDelta": -373,
+      "grainLedgerSum": 13180.49,
+      "grainActualDelta": 13180.49,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "recruit": -400,
+       "fortify": -180,
+       "tax": 897.2,
+       "upkeep": -437.2,
+       "admin": -113,
+       "diplomacy": -30,
+       "pacify": -40,
+       "intel": -30,
+       "national": -40
+      },
+      "grain": {
+       "garrison": -3392.64,
+       "army": -1291.67,
+       "harvest": 17864.8
+      }
+     },
+     {
+      "faction": "silla",
+      "goldLedgerSum": -14.55,
+      "goldActualDelta": -14.55,
+      "grainLedgerSum": 3587.2,
+      "grainActualDelta": 3587.2,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "tax": 132.45,
+       "upkeep": -64,
+       "admin": -8,
+       "national": -15,
+       "facility": -60
+      },
+      "grain": {
+       "garrison": -612.8,
+       "harvest": 4200
+      }
+     },
+     {
+      "faction": "gochang",
+      "goldLedgerSum": -45.67,
+      "goldActualDelta": -45.67,
+      "grainLedgerSum": 1492,
+      "grainActualDelta": 1492,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "fortify": -60,
+       "tax": 60.13,
+       "upkeep": -30.8,
+       "national": -15
+      },
+      "grain": {
+       "garrison": -308,
+       "harvest": 1800
+      }
+     },
+     {
+      "faction": "byeokjin",
+      "goldLedgerSum": -133.82,
+      "goldActualDelta": -133.82,
+      "grainLedgerSum": 1282.4,
+      "grainActualDelta": 1282.4,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "recruit": -150,
+       "tax": 49.78,
+       "upkeep": -33.6
+      },
+      "grain": {
+       "garrison": -317.6,
+       "harvest": 1600
+      }
+     },
+     {
+      "faction": "sangju",
+      "goldLedgerSum": -140.89,
+      "goldActualDelta": -140.89,
+      "grainLedgerSum": 1632,
+      "grainActualDelta": 1632,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "fortify": -60,
+       "tax": 56.61,
+       "upkeep": -37.5,
+       "recruit": -100
+      },
+      "grain": {
+       "garrison": -368,
+       "harvest": 2000
+      }
+     },
+     {
+      "faction": "myeongju",
+      "goldLedgerSum": 22.36,
+      "goldActualDelta": 22.36,
+      "grainLedgerSum": 1760,
+      "grainActualDelta": 1760,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "tax": 67.76,
+       "upkeep": -45.4
+      },
+      "grain": {
+       "garrison": -440,
+       "harvest": 2200
+      }
+     },
+     {
+      "faction": "goul",
+      "goldLedgerSum": -48.53,
+      "goldActualDelta": -48.53,
+      "grainLedgerSum": 1327.2,
+      "grainActualDelta": 1327.2,
+      "goldUnclassified": 0,
+      "grainUnclassified": 0,
+      "entriesAfterSettlement": false,
+      "gold": {
+       "fortify": -60,
+       "tax": 39.07,
+       "upkeep": -27.6
+      },
+      "grain": {
+       "garrison": -272.8,
+       "harvest": 1600
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "G1-ECON-02",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "paused": {
+     "first": {
+      "ok": true,
+      "queued": true,
+      "id": "dom_cmd_25",
+      "replaced": 0,
+      "reservedGold": 60
+     },
+     "second": {
+      "ok": false,
+      "reason": "쓸 수 있는 국고가 부족합니다. (60 필요, 예약분을 빼고 0 남음)"
+     },
+     "reservedGold": 60,
+     "treasuryWhileQueued": 60,
+     "treasuryAfterResume": 0,
+     "resume": {
+      "ok": true,
+      "committed": 1,
+      "failed": []
+     }
+    },
+    "running": {
+     "first": true,
+     "second": {
+      "ok": false,
+      "reason": "쓸 수 있는 국고가 부족합니다. (60 필요, 예약분을 빼고 0 남음)"
+     },
+     "treasury": 0
+    },
+    "minTreasuryAllFactionsAfter6Weeks": 58.81
+   }
+  },
+  {
+   "id": "G1-TIME-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "timeline": [
+     "929년 10월 2주:RUNNING",
+     "929년 10월 3주:RUNNING",
+     "929년 10월 4주:RUNNING",
+     "929년 11월 1주:PAUSED_MONTHLY"
+    ],
+    "settlementIds": [
+     "S04_0929_10:goryeo:0929-10"
+    ],
+    "gate": {
+     "phase": "PAUSED_MONTHLY",
+     "activeSettlementId": "S04_0929_10:goryeo:0929-10",
+     "nextUnprocessedTickId": "tick_5",
+     "resumeRequired": true,
+     "originSpeed": null,
+     "autoPauseMonthly": true
+    },
+    "weekAfter5MoreTickCalls": 4,
+    "hashUnchanged": true,
+    "calendarNote": "달 경계는 dateOf()가 정한다. 기존 P0-R 달력은 한 달이 4주라 주간 틱이 달을 가로지르지 않는다."
+   }
+  },
+  {
+   "id": "G1-TIME-02",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "tickCallsWhilePaused": 600,
+    "week": [
+     4,
+     4
+    ],
+    "treasury": [
+     1641.4810000000007,
+     1641.4810000000007
+    ],
+    "grain": [
+     39271.200000000004,
+     39271.200000000004
+    ],
+    "aiOrdersLogged": 0,
+    "hashUnchanged": true
+   }
+  },
+  {
+   "id": "G1-TIME-03",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "settlementId": "S04_0929_10:goryeo:0929-10",
+    "viewedTimes": 3,
+    "stateHashBeforeAfterViews": [
+     "e2aa2521",
+     "e2aa2521"
+    ],
+    "saveLoadIdentical": true,
+    "saveLoadSaveIdentical": true,
+    "queuedCommands": 0,
+    "sameSeedReplayIdentical": true,
+    "continuedAfterLoadSameHash": true
+   }
+  },
+  {
+   "id": "G1-TIME-04",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "week": 9,
+    "everPaused": false,
+    "settlements": [
+     "0929-10",
+     "0929-11"
+    ]
+   }
+  },
+  {
+   "id": "G1-OPK-02",
+   "status": "PASS",
+   "note": "",
+   "evidence": [
+    {
+     "name": "왕건",
+     "현직": "고려 국왕",
+     "통솔": 82,
+     "무력": 70,
+     "지략": 80,
+     "정치": 90,
+     "신망": 88,
+     "충성": 100,
+     "적성": 89,
+     "상태": "KING_ROLE",
+     "사유": "왕건은 고려 국왕입니다. 군주는 실무 보직에 앉힐 수 없습니다."
+    },
+    {
+     "name": "박술희",
+     "현직": "없음",
+     "통솔": 70,
+     "무력": 72,
+     "지략": 62,
+     "정치": 60,
+     "신망": 58,
+     "충성": 88,
+     "적성": 59,
+     "상태": "OK",
+     "사유": ""
+    },
+    {
+     "name": "복지겸",
+     "현직": "없음",
+     "통솔": 66,
+     "무력": 68,
+     "지략": 64,
+     "정치": 58,
+     "신망": 60,
+     "충성": 82,
+     "적성": 59,
+     "상태": "OK",
+     "사유": ""
+    },
+    {
+     "name": "홍유",
+     "현직": "없음",
+     "통솔": 72,
+     "무력": 74,
+     "지략": 60,
+     "정치": 55,
+     "신망": 65,
+     "충성": 85,
+     "적성": 58,
+     "상태": "OK",
+     "사유": ""
+    },
+    {
+     "name": "배현경",
+     "현직": "없음",
+     "통솔": 70,
+     "무력": 78,
+     "지략": 55,
+     "정치": 50,
+     "신망": 62,
+     "충성": 85,
+     "적성": 54,
+     "상태": "OK",
+     "사유": ""
+    },
+    {
+     "name": "유금필",
+     "현직": "없음",
+     "통솔": 88,
+     "무력": 90,
+     "지략": 75,
+     "정치": 45,
+     "신망": 80,
+     "충성": 90,
+     "적성": 56,
+     "상태": "OK",
+     "사유": ""
+    }
+   ]
+  },
+  {
+   "id": "G1-OPK-03",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "validate": {
+     "ok": false,
+     "reason": "왕건은 고려 국왕입니다. 군주는 실무 보직에 앉힐 수 없습니다.",
+     "code": "KING_ROLE"
+    },
+    "command": false,
+    "note": "왕건(정치 90)은 개경의 정치적 성주(Region.lord)로 남고 실무 성주·부관 자리는 비어 있다.",
+    "localLord": "wanggeon",
+    "governorOfficer": null
+   }
+  },
+  {
+   "id": "G1-OPK-04",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "before": {
+     "army": "yugeumpil",
+     "armyLoc": "cheorwon",
+     "primary": {
+      "type": "ARMY",
+      "slotId": "army:a6:commander",
+      "label": "철원 부대 주장"
+     }
+    },
+    "status": "TRANSFER_REQUIRED",
+    "effect": {
+     "gain": [
+      "군사 효율 +10.0% · 적성 89"
+     ],
+     "loss": [
+      "철원 부대 주장 자리가 빕니다: 병력 500명의 지휘 보정 +15.2% → 0% (통솔 50 취급)"
+     ]
+    },
+    "after": {
+     "armyCommander": null,
+     "armyStillExists": true,
+     "characterArmyId": null,
+     "primary": {
+      "type": "CITY_DEPUTY",
+      "slotId": "city:cheorwon:deputy:0",
+      "label": "철원 부관 1(군사)",
+      "status": "ACTIVE",
+      "effectiveWeek": 1
+     },
+     "cheorwonDeputies": [
+      "yugeumpil",
+      null
+     ],
+     "primaryJobCount": 1
+    },
+    "cheorwonMilitaryEff": [
+     1,
+     1.1
+    ],
+    "failedTransferKeepsOldPost": {
+     "ok": false,
+     "reason": "고창은 자치를 보장한 고창 호족의 거점입니다. 임명·건설·모병은 직할 협상을 거쳐야 합니다.",
+     "stillDeputy": "yugeumpil"
+    }
+   }
+  },
+  {
+   "id": "G1-GOV-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "mode": "INDEPENDENT",
+    "rejected": {
+     "ASSIGN_CITY_OFFICER": {
+      "ok": false,
+      "reason": "고창은 고창 호족의 거점입니다. 조회와 외교만 할 수 있습니다."
+     },
+     "START_FACILITY_BUILD": {
+      "ok": false,
+      "reason": "고창은 고창 호족의 거점입니다. 조회와 외교만 할 수 있습니다."
+     },
+     "RECRUIT": {
+      "ok": false,
+      "reason": "우리 거점이 아닙니다."
+     },
+     "SET_CITY_FOCUS": {
+      "ok": false,
+      "reason": "고창은 고창 호족의 거점입니다. 조회와 외교만 할 수 있습니다."
+     },
+     "REQUEST_GOVERNANCE_CHANGE": {
+      "ok": false,
+      "reason": "고창은 고창 호족의 거점입니다. 통치 방식을 바꾸려면 먼저 귀부 협상이 필요합니다."
+     }
+    },
+    "allowed": {
+     "viewCity": true,
+     "envoyGift": true,
+     "envoySubmissionOffer": true,
+     "scout": true
+    }
+   }
+  },
+  {
+   "id": "G1-GOV-02",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "autonomous": {
+     "mode": "AUTONOMOUS",
+     "canAppoint": false,
+     "burden": 10.45,
+     "weeklyAdminCost": 17,
+     "terms": {
+      "autonomy": "full",
+      "mobilize": false,
+      "protect": 8
+     },
+     "vassalAgreements": 1,
+     "appoint": false,
+     "recruit": false
+    },
+    "direct": {
+     "mode": "DIRECT",
+     "canAppoint": true,
+     "burden": 10.95,
+     "weeklyAdminCost": 19,
+     "terms": {
+      "autonomy": "direct",
+      "mobilize": true,
+      "protect": 8
+     },
+     "vassalAgreements": 1,
+     "appoint": true,
+     "callArms": "ok",
+     "controllerStillGochang": true,
+     "garrisonStillGochang": true
+    },
+    "tributeWeekly": {
+     "beforeDirect": 0,
+     "goryeoReceives": 7.92,
+     "gochangPays": -7.92,
+     "netCreated": 0
+    },
+    "note": "직할 세수는 기존 상납 이벤트의 비율(5할)로만 흐른다. 새 수입을 만들지 않으므로 두 세력 합계는 0."
+   }
+  },
+  {
+   "id": "G1-GOV-03",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "preview": [
+     "뜻을 묻지 않고 밀어붙입니다: 불만 +15, 신뢰 -15. 곧바로 반란이 일어나지는 않지만 불만이 쌓이면 신뢰가 달마다 깎입니다.",
+     "행정 부담 0.93 → 1.04 (징수 효율 99%), 행정 유지비 주당 +3"
+    ],
+    "before": {
+     "controller": "gochang",
+     "overlord": "goryeo",
+     "garrison": 1650,
+     "atWar": false,
+     "grievance": 3,
+     "trust": 55,
+     "admin": "gochang",
+     "transition": null
+    },
+    "rightAfterClick": {
+     "controller": "gochang",
+     "overlord": "goryeo",
+     "garrison": 1650,
+     "atWar": false,
+     "grievance": 18,
+     "trust": 40,
+     "admin": "gochang",
+     "transition": "force"
+    },
+    "afterTransition": {
+     "controller": "gochang",
+     "overlord": "goryeo",
+     "garrison": 1650,
+     "atWar": false,
+     "grievance": 19,
+     "trust": 40,
+     "admin": "goryeo",
+     "transition": null
+    },
+    "warningAtThreshold": [
+     {
+      "type": "GRIEVANCE",
+      "band": 1,
+      "regionId": "gochang",
+      "text": "고창의 불만이 경계 단계(25)에 들어섰습니다."
+     }
+    ],
+    "grievanceAfterMonth": 25,
+    "response": {
+     "reassureAutonomy": true,
+     "grievance": [
+      25,
+      15
+     ],
+     "trust": [
+      40,
+      45
+     ],
+     "admin": "gochang"
+    },
+    "rebelledWithin8Weeks": false,
+    "ifNoResponse6WeeksLater": {
+     "week": 14,
+     "overlord": "hubaekje",
+     "trust": 10,
+     "how": "고창 호족이 후백제에 귀부했다. (고려와의 관계는 끊어졌다)"
+    },
+    "note": "강제 직할 직후에는 지배·군대·전쟁 상태가 그대로다. 대응하지 않으면 낮아진 신뢰 때문에 기존 외교 판정(귀부 권유)에서 다른 왕국으로 넘어갈 수 있다. 새 반란 스크립트는 없다."
+   }
+  },
+  {
+   "id": "G1-CITY-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "startCostPaidOnce": 240,
+    "effectBeforeCompletion": 1,
+    "upkeepLedgerDuringConstruction": 0,
+    "levelsAfter4Weeks": {
+     "market": 1,
+     "irrigation": 1,
+     "barracks": 1,
+     "guardpost": 1
+    },
+    "upkeepLedgerFirstWeekAfter": -4,
+    "market": {
+     "incomeMultiplier": 1.06
+    },
+    "irrigation": {
+     "harvestExtraVsControl": 120,
+     "expected": 120
+    },
+    "barracks": {
+     "trainingControlVsBuilt_month1": [
+      50,
+      51
+     ],
+     "month2": [
+      50,
+      52
+     ]
+    },
+    "guardpost": {
+     "stabilityControlVsBuilt_month1": [
+      54,
+      56
+     ],
+     "month2": [
+      53,
+      57
+     ]
+    },
+    "temple": {
+     "moraleControlVsBuilt": [
+      75,
+      78
+     ],
+     "settlementNote": [
+      "사찰·구휼소 Lv1: 민심 +1"
+     ]
+    },
+    "maxLevel": {
+     "marketLevel": 3,
+     "fourthAttempt": "시장은 이미 최고 단계(Lv3)입니다."
+    },
+    "totalFacilityLedger": -600
+   }
+  },
+  {
+   "id": "G1-CITY-02",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "threeMonthsNoOfficer": [
+     {
+      "week": 0,
+      "base": 29.54,
+      "actual": 29.54,
+      "mult": 1
+     },
+     {
+      "week": 4,
+      "base": 28.55,
+      "actual": 28.55,
+      "mult": 1
+     },
+     {
+      "week": 8,
+      "base": 27.57,
+      "actual": 27.57,
+      "mult": 1
+     }
+    ],
+    "officersWereEmpty": true,
+    "deputyAssigned": {
+     "who": "박술희",
+     "domain": "상업",
+     "travelWeeks": 4,
+     "fit": 59
+    },
+    "incomeMultiplier": [
+     1,
+     1.08
+    ],
+    "expected": 1.08
+   }
+  },
+  {
+   "id": "G1-NAT-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "fixture": "devFastResearch",
+    "steps": [
+     [
+      "병영 착공",
+      true
+     ],
+     [
+      "MIL 담당관 박술희",
+      true
+     ],
+     [
+      "MIL-02 착수",
+      true
+     ]
+    ],
+    "startProgress": 64,
+    "recruitBeforeUnlock": "신형 중장보병 편제는 군사 연구(MIL-02)를 마쳐야 모을 수 있습니다.",
+    "progressByMonth": [
+     {
+      "week": 4,
+      "pct": 83.22
+     },
+     {
+      "week": 8,
+      "pct": 0
+     }
+    ],
+    "completedAtWeek": 8,
+    "recruitWithoutBarracks": "철원에 병영 Lv1 이상이 있어야 중장보병을 모을 수 있습니다.",
+    "legacyHeavyStillRecruitable": true,
+    "advRecruited": 100,
+    "legacyHeavyGarrison": [
+     1000,
+     1000
+    ],
+    "unit": {
+     "name": "중장보병",
+     "power": 1.45,
+     "cost": 40,
+     "grain": 18,
+     "gold": 1,
+     "def": 0.65,
+     "note": "신형 편제(MIL-02 해금·병영 Lv1 필요). 수비 +10%, 손실이 가장 적다, 느리다",
+     "draft": true
+    },
+    "armamentPrerequisite": "abstracted_for_G1"
+   }
+  },
+  {
+   "id": "G1-NAT-02",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "completedAtWeek": 8,
+    "enactBeforeComplete": "중앙 재정 정비 연구를 아직 마치지 못했습니다.",
+    "capacity": {
+     "start": 11.2,
+     "afterResearchOnly": 11.2,
+     "twoWeeksLaterStillNotEnacted": 11.2,
+     "afterEnact": 13.2,
+     "fiveWeeksLater": 13.2
+    },
+    "secondEnact": "이미 시행한 제도입니다."
+   }
+  },
+  {
+   "id": "G1-NAT-03",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "rejected": {
+     "vassalAutonomous": "고창은 자치를 보장한 고창 호족의 거점입니다. 임명·건설·모병은 직할 협상을 거쳐야 합니다.",
+     "foreign": "완산은 후백제의 거점입니다. 조회와 외교만 할 수 있습니다.",
+     "ownSelfRule": "나주는 지방 세력의 자치에 맡긴 거점입니다. 임명·건설을 하려면 먼저 직할로 돌려야 합니다."
+    },
+    "naturalProgressAfter1Month": 12.43,
+    "qaShortcut": "진척을 95%로 올려 다음 결산에서 완료",
+    "completed": true,
+    "harvestMultiplier": {
+     "cheorwon": 1.1,
+     "gaegyeong": 1,
+     "cheongju": 1
+    },
+    "grainLedgerCategories": [
+     "garrison",
+     "harvest"
+    ],
+    "harvestWeek52ExtraVsControl": 200,
+    "expected": 200,
+    "note": "대조군과의 수확 차이 = 철원 세수×40×10% (다른 AI 전개 차이로 1 미만 오차 허용)"
+   }
+  },
+  {
+   "id": "G1-NAT-04",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "started": [
+     true,
+     true,
+     true
+    ],
+    "secondInSameCategory": "군사 연구에서는 이미 보병 편제 정비를 진행 중입니다. 분야마다 한 과제만 진행합니다.",
+    "sameOfficerSecondSlot": "TRANSFER_REQUIRED",
+    "weeklyBudgetLedger": [
+     -30,
+     -30,
+     -30,
+     -30
+    ],
+    "brokeWeeksFixture": "3~4주째 국고 0",
+    "projectDeltas": [
+     {
+      "cat": "MIL",
+      "project": "MIL-01",
+      "paid": 40,
+      "committed": 40,
+      "creditWeeks": 4,
+      "unpaidWeeks": 0,
+      "delta": 20.38,
+      "fullMonthWouldBe": 20.38
+     },
+     {
+      "cat": "SOC",
+      "project": "SOC-01",
+      "paid": 40,
+      "committed": 40,
+      "creditWeeks": 4,
+      "unpaidWeeks": 0,
+      "delta": 18,
+      "fullMonthWouldBe": 18
+     },
+     {
+      "cat": "PRJ",
+      "project": "PRJ-02",
+      "paid": 40,
+      "committed": 40,
+      "creditWeeks": 4,
+      "unpaidWeeks": 0,
+      "delta": 12.43,
+      "fullMonthWouldBe": 12.43
+     }
+    ],
+    "paidEqualsLedger": [
+     120,
+     120
+    ]
+   }
+  },
+  {
+   "id": "G1-AI-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "npcFactionsActing": 7,
+    "ordersByFaction": {
+     "goryeo": {
+      "FORTIFY": 1,
+      "ENVOY": 3,
+      "RECRUIT": 4,
+      "APPOINT": 2,
+      "ASSIGN_NATIONAL_OFFICER": 1,
+      "MARCH": 5,
+      "START_NATIONAL_PROJECT": 1,
+      "SCOUT": 2,
+      "START_FACILITY_BUILD": 5,
+      "SET_CITY_FOCUS": 1,
+      "CALL_ARMS": 2
+     },
+     "hubaekje": {
+      "MARCH": 4,
+      "RECRUIT": 6,
+      "FORTIFY": 3,
+      "ASSIGN_NATIONAL_OFFICER": 2,
+      "ENVOY": 3,
+      "PACIFY": 1,
+      "SCOUT": 5,
+      "START_NATIONAL_PROJECT": 2,
+      "START_FACILITY_BUILD": 3,
+      "SET_CITY_FOCUS": 1
+     },
+     "silla": {
+      "ASSIGN_NATIONAL_OFFICER": 1,
+      "START_NATIONAL_PROJECT": 1,
+      "START_FACILITY_BUILD": 2,
+      "SET_CITY_FOCUS": 1
+     },
+     "byeokjin": {
+      "RECRUIT": 3
+     },
+     "sangju": {
+      "FORTIFY": 1,
+      "RECRUIT": 3
+     },
+     "goul": {
+      "FORTIFY": 1,
+      "RECRUIT": 2
+     },
+     "myeongju": {
+      "FORTIFY": 1
+     }
+    },
+    "aiOrdersRejectedBySameValidator": 1,
+    "minTreasury": 58.81,
+    "domesticDecisionsWithReasons": [
+     "929년 10월 2주 고려 ASSIGN_NATIONAL_OFFICER: 군사 연구 담당관에 배현경(적성 64)",
+     "929년 10월 2주 후백제 ASSIGN_NATIONAL_OFFICER: 군사 연구 담당관에 능환(적성 55)",
+     "929년 10월 2주 신라 ASSIGN_NATIONAL_OFFICER: 사회 제도 담당관에 김봉휴(적성 70)",
+     "929년 10월 3주 고려 START_NATIONAL_PROJECT: 보병 편제 정비 착수(절약 예산, 주간 수지 111)",
+     "929년 10월 3주 후백제 START_NATIONAL_PROJECT: 보병 편제 정비 착수(표준 예산, 주간 수지 90)",
+     "929년 10월 3주 신라 START_NATIONAL_PROJECT: 호족 인사 장부 착수(절약 예산, 주간 수지 14)",
+     "929년 10월 4주 고려 START_FACILITY_BUILD: 개경 시장 Lv1 착공(국고 60)",
+     "929년 10월 4주 후백제 ASSIGN_NATIONAL_OFFICER: 사회 제도 담당관에 최승우(적성 82)",
+     "929년 10월 4주 신라 START_FACILITY_BUILD: 경주 사찰·구휼소 Lv1 착공(국고 60)",
+     "929년 11월 1주 고려 SET_CITY_FOCUS: 개경 중점을 상업으로",
+     "929년 11월 1주 후백제 START_NATIONAL_PROJECT: 호족 인사 장부 착수(표준 예산, 주간 수지 74)",
+     "929년 11월 1주 신라 SET_CITY_FOCUS: 경주 중점을 상업으로"
+    ],
+    "note": "AI는 플레이어와 같은 validate/issueOrder를 거친다. 전용 비용·권한·연구 경로는 없다."
+   }
+  },
+  {
+   "id": "G1-DETER-01",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "weeks": 14,
+    "hashA": "74d04f46",
+    "hashB": "74d04f46",
+    "settlementsIdentical": true,
+    "aiLogIdentical": true,
+    "battlesIdentical": true,
+    "resumedFromSaveAtWeek6Hash": "74d04f46"
+   }
+  },
+  {
+   "id": "G1-PLAY-01",
+   "status": "PASS",
+   "note": "고정 각본 자동 플레이 결과다. 사람이 느끼는 재미·이해도(11.1의 질문)와 GQS는 측정하지 않았다.",
+   "evidence": [
+    {
+     "player": "goryeo",
+     "weeks": 14,
+     "over": null,
+     "commands": [
+      {
+       "week": 0,
+       "cmd": "SET_CITY_FOCUS",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "START_FACILITY_BUILD",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "ASSIGN_CITY_OFFICER",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "ASSIGN_NATIONAL_OFFICER",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "START_NATIONAL_PROJECT",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 4,
+       "cmd": "START_FACILITY_BUILD",
+       "ok": true,
+       "queued": true,
+       "reason": ""
+      },
+      {
+       "week": 8,
+       "cmd": "CHANGE_NATIONAL_BUDGET",
+       "ok": true,
+       "queued": true,
+       "reason": ""
+      }
+     ],
+     "capitalIncomeMultiplier": 1.26,
+     "facilities": {
+      "market": 1,
+      "irrigation": 0,
+      "barracks": 0,
+      "guardpost": 1,
+      "temple_relief": 0
+     },
+     "socProgress": 44.58,
+     "socCompleted": [],
+     "monthlySettlements": [
+      {
+       "month": "0929-10",
+       "gold": [
+        1200,
+        1634
+       ],
+       "grain": [
+        28500,
+        39271
+       ],
+       "projects": [
+        "SOC-01 0→13%"
+       ],
+       "alerts": 0,
+       "events": 2
+      },
+      {
+       "month": "0929-11",
+       "gold": [
+        1634,
+        2076
+       ],
+       "grain": [
+        39271,
+        36856
+       ],
+       "projects": [
+        "SOC-01 13→26.01%"
+       ],
+       "alerts": 0,
+       "events": 1
+      },
+      {
+       "month": "0929-12",
+       "gold": [
+        2076,
+        2546
+       ],
+       "grain": [
+        36856,
+        34467
+       ],
+       "projects": [
+        "SOC-01 26.01→44.58%"
+       ],
+       "alerts": 0,
+       "events": 3
+      }
+     ],
+     "chronicleTypes": {
+      "start": 1,
+      "submit": 1,
+      "harvest": 1,
+      "siege": 2,
+      "war": 1,
+      "retreat": 2
+     }
+    },
+    {
+     "player": "hubaekje",
+     "weeks": 14,
+     "over": null,
+     "commands": [
+      {
+       "week": 0,
+       "cmd": "SET_CITY_FOCUS",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "START_FACILITY_BUILD",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "ASSIGN_CITY_OFFICER",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "ASSIGN_NATIONAL_OFFICER",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "START_NATIONAL_PROJECT",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 4,
+       "cmd": "START_FACILITY_BUILD",
+       "ok": true,
+       "queued": true,
+       "reason": ""
+      },
+      {
+       "week": 8,
+       "cmd": "CHANGE_NATIONAL_BUDGET",
+       "ok": true,
+       "queued": true,
+       "reason": ""
+      }
+     ],
+     "capitalIncomeMultiplier": 1.28,
+     "facilities": {
+      "market": 1,
+      "irrigation": 0,
+      "barracks": 0,
+      "guardpost": 1,
+      "temple_relief": 0
+     },
+     "socProgress": 46.66,
+     "socCompleted": [],
+     "monthlySettlements": [
+      {
+       "month": "0929-10",
+       "gold": [
+        1400,
+        1763
+       ],
+       "grain": [
+        38500,
+        52510
+       ],
+       "projects": [
+        "SOC-01 0→13.61%"
+       ],
+       "alerts": 0,
+       "events": 7
+      },
+      {
+       "month": "0929-11",
+       "gold": [
+        1763,
+        2149
+       ],
+       "grain": [
+        52510,
+        48676
+       ],
+       "projects": [
+        "SOC-01 13.61→27.22%"
+       ],
+       "alerts": 0,
+       "events": 2
+      },
+      {
+       "month": "0929-12",
+       "gold": [
+        2149,
+        2588
+       ],
+       "grain": [
+        48676,
+        44945
+       ],
+       "projects": [
+        "SOC-01 27.22→46.66%"
+       ],
+       "alerts": 0,
+       "events": 1
+      }
+     ],
+     "chronicleTypes": {
+      "start": 1,
+      "envoy": 2,
+      "appoint": 2,
+      "pact": 2,
+      "office": 2,
+      "harvest": 1,
+      "siege": 1,
+      "capture": 1
+     }
+    },
+    {
+     "player": "gochang",
+     "weeks": 14,
+     "over": null,
+     "commands": [
+      {
+       "week": 0,
+       "cmd": "SET_CITY_FOCUS",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "START_FACILITY_BUILD",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "ASSIGN_CITY_OFFICER",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "ASSIGN_NATIONAL_OFFICER",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 0,
+       "cmd": "START_NATIONAL_PROJECT",
+       "ok": true,
+       "queued": false,
+       "reason": ""
+      },
+      {
+       "week": 4,
+       "cmd": "START_FACILITY_BUILD",
+       "ok": true,
+       "queued": true,
+       "reason": ""
+      },
+      {
+       "week": 8,
+       "cmd": "CHANGE_NATIONAL_BUDGET",
+       "ok": true,
+       "queued": true,
+       "reason": ""
+      }
+     ],
+     "capitalIncomeMultiplier": 1.26,
+     "facilities": {
+      "market": 1,
+      "irrigation": 0,
+      "barracks": 0,
+      "guardpost": 1,
+      "temple_relief": 0
+     },
+     "socProgress": 44.24,
+     "socCompleted": [],
+     "monthlySettlements": [
+      {
+       "month": "0929-10",
+       "gold": [
+        250,
+        211
+       ],
+       "grain": [
+        4000,
+        5492
+       ],
+       "projects": [
+        "SOC-01 0→12.9%"
+       ],
+       "alerts": 0,
+       "events": 8
+      },
+      {
+       "month": "0929-11",
+       "gold": [
+        211,
+        173
+       ],
+       "grain": [
+        5492,
+        5184
+       ],
+       "projects": [
+        "SOC-01 12.9→25.8%"
+       ],
+       "alerts": 0,
+       "events": 2
+      },
+      {
+       "month": "0929-12",
+       "gold": [
+        173,
+        179
+       ],
+       "grain": [
+        5184,
+        4922
+       ],
+       "projects": [
+        "SOC-01 25.8→44.24%"
+       ],
+       "alerts": 0,
+       "events": 5
+      }
+     ],
+     "chronicleTypes": {
+      "start": 1,
+      "envoy": 2,
+      "appoint": 3,
+      "pact": 3,
+      "office": 2,
+      "submit": 1,
+      "harvest": 1,
+      "siege": 2,
+      "war": 1,
+      "retreat": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "G1-REG-01",
+   "status": "PASS",
+   "note": "원 P0-R QA-01~12 목록은 이 저장소에 없다. 대신 내정을 끈 새 엔진이 R3 기준선 엔진과 60주 동안 같은 상태(연대기·세력·거점·신뢰)를 내는지 9판 비교했다.",
+   "evidence": {
+    "baselineEquivalenceDomesticOff": [
+     {
+      "player": "goryeo",
+      "seed": 929,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 21
+     },
+     {
+      "player": "goryeo",
+      "seed": 7,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 15
+     },
+     {
+      "player": "goryeo",
+      "seed": 31337,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 17
+     },
+     {
+      "player": "hubaekje",
+      "seed": 929,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 19
+     },
+     {
+      "player": "hubaekje",
+      "seed": 7,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 21
+     },
+     {
+      "player": "hubaekje",
+      "seed": 31337,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 18
+     },
+     {
+      "player": "gochang",
+      "seed": 929,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 28
+     },
+     {
+      "player": "gochang",
+      "seed": 7,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 25
+     },
+     {
+      "player": "gochang",
+      "seed": 31337,
+      "same": true,
+      "divergedAtWeek": null,
+      "weeks": 60,
+      "chronicle": 37
+     }
+    ],
+    "sixtyWeeksDomesticOn": [
+     {
+      "player": "goryeo",
+      "week": 60,
+      "over": "end",
+      "nanInState": false,
+      "settlements": 15,
+      "chronicle": 25,
+      "battles": 16,
+      "saveBytes": 433914
+     },
+     {
+      "player": "hubaekje",
+      "week": 60,
+      "over": "end",
+      "nanInState": false,
+      "settlements": 15,
+      "chronicle": 28,
+      "battles": 16,
+      "saveBytes": 402155
+     },
+     {
+      "player": "gochang",
+      "week": 60,
+      "over": "end",
+      "nanInState": false,
+      "settlements": 15,
+      "chronicle": 35,
+      "battles": 17,
+      "saveBytes": 480885
+     }
+    ]
+   }
+  },
+  {
+   "id": "SAVE-MIGRATION",
+   "status": "PASS",
+   "note": "",
+   "evidence": {
+    "from": "v3 (R3 기준선 엔진으로 10주 진행한 세이브)",
+    "toVersion": 4,
+    "migratedFrom": 3,
+    "domesticDerived": true,
+    "audit": [
+     {
+      "week": 10,
+      "code": "MIGRATED",
+      "note": "v3 세이브에서 내정 상태를 유도해 초기화"
+     }
+    ],
+    "originalFieldsKept": true,
+    "migrateTwiceIdentical": true,
+    "continued20Weeks": 30,
+    "olderThanV3": "null을 돌려 주고 UI가 안내한다"
+   }
+  }
+ ]
+}
